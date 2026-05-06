@@ -1,0 +1,29 @@
+---
+import { TextAlignStart, CircleUserRound } from "lucide-react";
+---
+
+<div class="navbar">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+        <TextAlignStart className="h-6 w-6" />
+      </div>
+      <ul
+        tabindex="-1"
+        class="menu menu-sm dropdown-content rounded-box z-1 mt-3 w-52 p-2"
+      >
+        <li><a>Homepage</a></li>
+        <li><a>Portfolio</a></li>
+        <li><a>About</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="navbar-center">
+    <a class="btn btn-ghost text-xl">LHNHS</a>
+  </div>
+  <div class="navbar-end">
+    <button class="btn btn-ghost btn-circle">
+      <CircleUserRound />
+    </button>
+  </div>
+</div>
