@@ -1,13 +1,13 @@
-<div class="hero min-h-screen">
-  <div class="hero-content text-center">
-    <div class="max-w-md">
-      <h1 class="text-5xl font-bold">LHNHS</h1>
-      <p class="py-6">
-        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-        excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a
-        id nisi.
-      </p>
-      <button class="btn btn-primary">Register</button>
-    </div>
+---
+import { BarData } from "./BarData";
+---
+
+<div class="flex h-screen w-full items-center justify-center">
+  <div class="card bg-base-300 rounded-box grid h-60 grow place-items-center">
+    <BarData client:load />
+  </div>
+  <div class="divider divider-horizontal">OR</div>
+  <div class="card bg-base-300 rounded-box grid h-60 grow place-items-center">
+    <BarData client:load />
   </div>
 </div>
