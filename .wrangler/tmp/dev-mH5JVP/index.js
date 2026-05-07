@@ -2098,7 +2098,7 @@ var Hono2 = class extends Hono {
 
 // src/server/index.ts
 var app = new Hono2();
-app.get("/api/health", (c) => c.text("Healthy! "));
+app.get("/api/health", (c) => c.json("Healthy! "));
 app.get("/favicon.ico", (c) => c.body(null, 204));
 var server_default = app;
 
@@ -2143,7 +2143,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-5OVpdC/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-iS76lW/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -2175,7 +2175,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-5OVpdC/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-iS76lW/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
