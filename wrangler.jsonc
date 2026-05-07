@@ -2,18 +2,20 @@
   "name": "lhnhs-project",
   "main": "src/server/index.ts",
   "compatibility_date": "2026-05-06",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
   "env": {
     "staging": {
       "vars": {
         "ENVIRONMENT": "staging"
-      },
-      "route": "staging.example.com/*"
+      }
     },
     "production": {
       "vars": {
         "ENVIRONMENT": "production"
-      },
-      "routes": ["example.com/foo/*", "example.com/bar/*"]
+      }
     }
   }
 }
