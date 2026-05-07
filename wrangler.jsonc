@@ -1,5 +1,5 @@
 {
   "name": "lhnhs-project",
-  "main": "src/index.js",
+  "main": "src/server/index.ts",
   "compatibility_date": "2026-05-06",
 }

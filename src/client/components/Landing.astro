@@ -1,13 +1,17 @@
 ---
 import { BarData } from "./BarData";
+import { ServerStatus } from "./ServerStatus";
 ---
 
-<div class="flex h-screen w-full items-center justify-center">
-  <div class="card bg-base-300 rounded-box grid h-96 grow place-items-center">
-    <BarData client:load dataset={[214, 653, 124, 543, 136, 754, 124]} />
-  </div>
-  <div class="divider divider-horizontal">OR</div>
-  <div class="card bg-base-300 rounded-box grid h-96 grow place-items-center">
-    <BarData client:load dataset={[214, 653, 124, 543, 136, 754, 124]} />
+<div>
+  <ServerStatus client:load />
+  <div class="flex h-screen w-full items-center justify-center">
+    <div class="card bg-base-300 rounded-box grid h-96 grow place-items-center">
+      <BarData client:load dataset={[214, 653, 124, 543, 136, 754, 124]} />
+    </div>
+    <div class="divider divider-horizontal">OR</div>
+    <div class="card bg-base-300 rounded-box grid h-96 grow place-items-center">
+      <BarData client:load dataset={[214, 653, 124, 543, 136, 754, 124]} />
+    </div>
   </div>
 </div>
