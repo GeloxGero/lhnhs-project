@@ -30,6 +30,7 @@
     "astro": "^6.2.2",
     "chart.js": "^4.5.1",
     "class-variance-authority": "^0.7.1",
+    "drizzle-orm": "^0.45.2",
     "eslint": "^10.3.0",
     "eslint-plugin-astro": "^1.7.0",
     "hono": "^4.12.18",
@@ -48,6 +49,7 @@
   "devDependencies": {
     "concurrently": "^9.2.1",
     "daisyui": "^5.5.19",
+    "drizzle-kit": "^0.31.10",
     "prettier-plugin-tailwindcss": "^0.8.0"
   }
 }
