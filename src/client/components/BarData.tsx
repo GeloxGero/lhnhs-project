@@ -19,48 +19,45 @@ ChartJS.register(
 );
 
 export const options = {
-  indexAxis: "y" as const,
-  elements: {
-    bar: {
-      borderWidth: 2,
-    },
-  },
   responsive: true,
   plugins: {
     legend: {
-      position: "right" as const,
+      position: "top" as const,
     },
     title: {
       display: true,
-      text: "Chart.js Horizontal Bar Chart",
+      text: "Chart.js Bar Chart",
     },
   },
 };
 
 const labels = ["January", "February", "March", "April", "May", "June", "July"];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: [2, 45, 12, 54, 54, 53, 23],
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Dataset 2",
-      data: [25, 55, 12, 14, 24, 13, 3],
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
+interface BarDataProps {
+  dataset: number[];
+  title?: string;
+}
 
-export const BarData = () => {
+export function BarData({ dataset, title }: BarDataProps) {
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Dataset 1",
+        data: dataset,
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+      {
+        label: "Dataset 2",
+        data: dataset,
+        backgroundColor: "rgba(210, 100, 24, 0.5",
+      },
+    ],
+  };
+
   return (
     <div>
       <Bar options={options} data={data} />
     </div>
   );
-};
+}
