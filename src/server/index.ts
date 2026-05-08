@@ -11,11 +11,10 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.route("/users", userRoute);
-app.route("/generalExpenditure", generalExpenditureRoute);
-app.route("/expenseSummary", expenseSummaryRoute);
+app.route("/api/users", userRoute);
+app.route("/api/generalExpenditure", generalExpenditureRoute);
+app.route("/api/expenseSummary", expenseSummaryRoute);
 
 app.use(accessAuth).get("/api/health", (c) => c.json("Healthy! "));
 
-app.get("/favicon.ico", (c) => c.body(null, 204));
 export default app;
