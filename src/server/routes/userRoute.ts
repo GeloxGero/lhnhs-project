@@ -1,6 +1,11 @@
 import { Hono } from "hono";
 
-const app = new Hono();
+import type { D1Database } from "@cloudflare/workers-types";
+
+type Bindings = {
+  DB: D1Database;
+};
+const app = new Hono<{ Bindings: Bindings }>();
 
 app.get("/", (c) => c.json("users get endpoint"));
 app.post("/", (c) => c.json("users post endpoint"));
