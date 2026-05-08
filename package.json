@@ -18,7 +18,9 @@
     "dryrun:staging": "bun run build:client && wrangler deploy --dry-run --env staging",
     "dryrun:prod": "bun run build:client && wrangler deploy --dry-run --env production",
     "deploy:staging": "bun run build:client && wrangler deploy --env staging",
-    "deploy:prod": "bun run build:client && wrangler deploy --env production"
+    "deploy:prod": "bun run build:client && wrangler deploy --env production",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply lhnhs-project-local-database --local"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.4",
