@@ -20,6 +20,7 @@ app.get("/email", (c) => c.json("auth get email endpoint"));
 
 //needs validation logic
 //idea is using zod, but hono has build in validation !!!check
+//Signs up the user, and then assigns them a token in their cookies
 app.post("/signup", async (c) => {
   const db = getDb(c.env.DB);
   const { email, password } = await c.req.json();
@@ -34,18 +35,13 @@ app.post("/signup", async (c) => {
 
     const token = await generateToken(users_instance.id);
 
-    await generateSignedCookie(
-      "Signed cookie",
-      token,
-      process.env.JWT_SECRET!,
-      {
-        path: "/", //cookie is available to all routes
-        secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
-        sameSite: "Strict", //or Lax
-        maxAge: 1 * 60 * 60, //1 hour
-      },
-    );
+    generateSignedCookie("Signed cookie", token, process.env.JWT_SECRET!, {
+      path: "/", //cookie is available to all routes
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "Strict", //or Lax
+      maxAge: 1 * 60 * 60, //1 hour
+    });
     return c.json(
       {
         message: "User registered successfully",
