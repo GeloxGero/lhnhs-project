@@ -7,7 +7,7 @@
     "binding": "ASSETS"
   },
   "secrets": {
-    "required": ["JWT_SECRET", "ENVIRONMENT"]
+    "required": ["JWT_SECRET"]
   },
   "d1_databases": [
     {
@@ -19,6 +19,9 @@
   ],
   "env": {
     "staging": {
+      "secrets": {
+        "required": ["JWT_SECRET"]
+      },
       "vars": {
         "ENVIRONMENT": "staging",
         "POLICY_AUD": "7ce4c6aa814de63172705a54f589a6d4f968fbd550c18630e2cd1c48ac2cae8a",
@@ -34,6 +37,9 @@
       ]
     },
     "production": {
+      "secrets": {
+        "required": ["JWT_SECRET"]
+      },
       "vars": {
         "ENVIRONMENT": "production"
       }

@@ -2,18 +2,63 @@ import { useState } from "react";
 import { CircleX } from "lucide-react";
 
 export const LoginForm = () => {
+  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!res.ok) {
+      const body = await res.json();
+      setError(body.error);
+      return;
+    }
+
+    window.location.href = "/";
+  };
+
   return (
-    <fieldset className="fieldset bg-base-200 border-base-300 rounded-box h-fit w-xs border p-4">
-      <legend className="fieldset-legend">Login</legend>
+    <form onSubmit={handleSubmit}>
+      <fieldset className="fieldset bg-base-200 border-base-300 rounded-box h-fit w-xs border p-4">
+        <legend className="fieldset-legend">Login</legend>
 
-      <label className="label">Email</label>
-      <input type="email" className="input" placeholder="Email" />
+        {error && (
+          <div role="alert" className="alert alert-error alert-soft">
+            <CircleX />
+            <span>{error}</span>
+          </div>
+        )}
 
-      <label className="label">Password</label>
-      <input type="password" className="input" placeholder="Password" />
+        <label className="label">Email</label>
+        <input
+          type="email"
+          className="input"
+          placeholder="Email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <button className="btn btn-neutral mt-4">Login</button>
-    </fieldset>
+        <label className="label">Password</label>
+        <input
+          type="password"
+          className="input"
+          placeholder="Password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button className="btn btn-neutral mt-4">Login</button>
+      </fieldset>
+    </form>
   );
 };
 

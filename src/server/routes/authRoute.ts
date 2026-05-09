@@ -4,8 +4,8 @@ import { users } from "../db/schema/usersSchema.ts";
 
 import type { D1Database } from "@cloudflare/workers-types";
 import type { EnvBindings } from "../index.ts";
-import { generateToken, hashPassword } from "../helpers.ts";
-import { generateSignedCookie } from "hono/cookie";
+import { generateToken, hashPassword, verifyPassword } from "../helpers.ts";
+import { setSignedCookie } from "hono/cookie";
 
 const app = new Hono<{ Bindings: EnvBindings }>();
 
@@ -14,6 +14,37 @@ app.get("/", (c) => c.json("auth get endpoint"));
 app.post("/", (c) => c.json("auth post endpoint"));
 
 app.get("/email", (c) => c.json("auth get email endpoint"));
+
+app.post("/login", async (c) => {
+  const db = getDb(c.env.DB);
+  const { email, password } = await c.req.json();
+
+  if (!email || !password)
+    return c.json({ error: "All fields are required!" }, 400);
+
+  try {
+    const user = await db.query.users.findFirst({ with: { email: email } });
+    if (!user) return c.json({ error: `No user with email: ${email}found!` });
+
+    const match = await verifyPassword(password, user.passwordHash);
+    if (!match) return c.json({ error: "Invalid password!" });
+
+    const token = await generateToken(user.id, c.env.JWT_SECRET);
+
+    const isDevelopment = new URL(c.req.url).hostname === "localhost";
+    setSignedCookie(c, "signed-cookie", token, c.env.JWT_SECRET, {
+      path: "/", //cookie is available to all routes
+      secure: !isDevelopment,
+      httpOnly: true,
+      sameSite: "Strict", //or Lax
+      maxAge: 1 * 60 * 60, //1 hour
+    });
+
+    return c.json({ message: "Successful login", user: user.email });
+  } catch (e) {
+    return c.json({ error: "Internal server error \\ database error" });
+  }
+});
 
 //needs validation logic
 //idea is using zod, but hono has build in validation !!!check
@@ -38,15 +69,16 @@ app.post("/signup", async (c) => {
       .values({ id: id, email: email, passwordHash: hashedPassword })
       .returning({ id: users.id });
 
-    // const token = await generateToken(users_instance.id, c.env.JWT_SECRET);
+    const token = await generateToken(users_instance.id, c.env.JWT_SECRET);
 
-    // generateSignedCookie("Signed cookie", token, c.env.JWT_SECRET!, {
-    //   path: "/", //cookie is available to all routes
-    //   secure: c.env.ENVIRONMENT === "production",
-    //   httpOnly: true,
-    //   sameSite: "Strict", //or Lax
-    //   maxAge: 1 * 60 * 60, //1 hour
-    // });
+    const isDevelopment = new URL(c.req.url).hostname === "localhost";
+    setSignedCookie(c, "signed-cookie", token, c.env.JWT_SECRET!, {
+      path: "/", //cookie is available to all routes
+      secure: !isDevelopment,
+      httpOnly: true,
+      sameSite: "Strict", //or Lax
+      maxAge: 1 * 60 * 60, //1 hour
+    });
 
     return c.json(
       {
