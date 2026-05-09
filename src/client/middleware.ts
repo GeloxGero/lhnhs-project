@@ -1,10 +1,17 @@
 import { defineMiddleware } from "astro:middleware";
 
 const publicRoutes = ["/auth/register", "/auth/login", "/auth"];
-const ignoredRoutes = ["/_astro", "/favicon.ico", "/logo.png", "/api"];
+const ignoredRoutes = [
+  "/_astro",
+  "/favicon.ico",
+  "/logo.png",
+  "/api",
+  "/auth/logo.png",
+];
 
 export const onRequest = defineMiddleware(
   async ({ cookies, url, redirect }, next) => {
+    console.log("MiddleWare Running");
     const token = cookies.get("signed-cookie")?.value;
 
     const isPublicRoute = publicRoutes.some((route) =>
