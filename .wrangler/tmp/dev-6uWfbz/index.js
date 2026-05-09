@@ -2456,7 +2456,7 @@ __name(isObject, "isObject");
 var unsupportedAlg =
   'Invalid or unsupported JWK "alg" (Algorithm) Parameter value';
 function subtleMapping(jwk) {
-  let algorithm2;
+  let algorithm;
   let keyUsages;
   switch (jwk.kty) {
     case "AKP": {
@@ -2464,7 +2464,7 @@ function subtleMapping(jwk) {
         case "ML-DSA-44":
         case "ML-DSA-65":
         case "ML-DSA-87":
-          algorithm2 = { name: jwk.alg };
+          algorithm = { name: jwk.alg };
           keyUsages = jwk.priv ? ["sign"] : ["verify"];
           break;
         default:
@@ -2477,13 +2477,13 @@ function subtleMapping(jwk) {
         case "PS256":
         case "PS384":
         case "PS512":
-          algorithm2 = { name: "RSA-PSS", hash: `SHA-${jwk.alg.slice(-3)}` };
+          algorithm = { name: "RSA-PSS", hash: `SHA-${jwk.alg.slice(-3)}` };
           keyUsages = jwk.d ? ["sign"] : ["verify"];
           break;
         case "RS256":
         case "RS384":
         case "RS512":
-          algorithm2 = {
+          algorithm = {
             name: "RSASSA-PKCS1-v1_5",
             hash: `SHA-${jwk.alg.slice(-3)}`,
           };
@@ -2493,7 +2493,7 @@ function subtleMapping(jwk) {
         case "RSA-OAEP-256":
         case "RSA-OAEP-384":
         case "RSA-OAEP-512":
-          algorithm2 = {
+          algorithm = {
             name: "RSA-OAEP",
             hash: `SHA-${parseInt(jwk.alg.slice(-3), 10) || 1}`,
           };
@@ -2509,7 +2509,7 @@ function subtleMapping(jwk) {
         case "ES256":
         case "ES384":
         case "ES512":
-          algorithm2 = {
+          algorithm = {
             name: "ECDSA",
             namedCurve: { ES256: "P-256", ES384: "P-384", ES512: "P-521" }[
               jwk.alg
@@ -2521,7 +2521,7 @@ function subtleMapping(jwk) {
         case "ECDH-ES+A128KW":
         case "ECDH-ES+A192KW":
         case "ECDH-ES+A256KW":
-          algorithm2 = { name: "ECDH", namedCurve: jwk.crv };
+          algorithm = { name: "ECDH", namedCurve: jwk.crv };
           keyUsages = jwk.d ? ["deriveBits"] : [];
           break;
         default:
@@ -2533,14 +2533,14 @@ function subtleMapping(jwk) {
       switch (jwk.alg) {
         case "Ed25519":
         case "EdDSA":
-          algorithm2 = { name: "Ed25519" };
+          algorithm = { name: "Ed25519" };
           keyUsages = jwk.d ? ["sign"] : ["verify"];
           break;
         case "ECDH-ES":
         case "ECDH-ES+A128KW":
         case "ECDH-ES+A192KW":
         case "ECDH-ES+A256KW":
-          algorithm2 = { name: jwk.crv };
+          algorithm = { name: jwk.crv };
           keyUsages = jwk.d ? ["deriveBits"] : [];
           break;
         default:
@@ -2553,7 +2553,7 @@ function subtleMapping(jwk) {
         'Invalid or unsupported JWK "kty" (Key Type) Parameter value',
       );
   }
-  return { algorithm: algorithm2, keyUsages };
+  return { algorithm, keyUsages };
 }
 __name(subtleMapping, "subtleMapping");
 async function jwkToKey(jwk) {
@@ -2562,7 +2562,7 @@ async function jwkToKey(jwk) {
       '"alg" argument is required when "jwk.alg" is not present',
     );
   }
-  const { algorithm: algorithm2, keyUsages } = subtleMapping(jwk);
+  const { algorithm, keyUsages } = subtleMapping(jwk);
   const keyData = { ...jwk };
   if (keyData.kty !== "AKP") {
     delete keyData.alg;
@@ -2571,7 +2571,7 @@ async function jwkToKey(jwk) {
   return crypto.subtle.importKey(
     "jwk",
     keyData,
-    algorithm2,
+    algorithm,
     jwk.ext ?? (jwk.d || jwk.priv ? false : true),
     jwk.key_ops ?? keyUsages,
   );
@@ -9453,130 +9453,6 @@ var getDb = /* @__PURE__ */ __name((binding) => {
   return drizzle(binding, { schema: indexSchema_exports });
 }, "getDb");
 
-// node_modules/hono/dist/utils/cookie.js
-var algorithm = { name: "HMAC", hash: "SHA-256" };
-var getCryptoKey = /* @__PURE__ */ __name(async (secret) => {
-  const secretBuf =
-    typeof secret === "string" ? new TextEncoder().encode(secret) : secret;
-  return await crypto.subtle.importKey("raw", secretBuf, algorithm, false, [
-    "sign",
-    "verify",
-  ]);
-}, "getCryptoKey");
-var makeSignature = /* @__PURE__ */ __name(async (value, secret) => {
-  const key = await getCryptoKey(secret);
-  const signature = await crypto.subtle.sign(
-    algorithm.name,
-    key,
-    new TextEncoder().encode(value),
-  );
-  return btoa(String.fromCharCode(...new Uint8Array(signature)));
-}, "makeSignature");
-var validCookieNameRegEx = /^[\w!#$%&'*.^`|~+-]+$/;
-var _serialize = /* @__PURE__ */ __name((name, value, opt = {}) => {
-  if (!validCookieNameRegEx.test(name)) {
-    throw new Error("Invalid cookie name");
-  }
-  let cookie = `${name}=${value}`;
-  if (name.startsWith("__Secure-") && !opt.secure) {
-    throw new Error("__Secure- Cookie must have Secure attributes");
-  }
-  if (name.startsWith("__Host-")) {
-    if (!opt.secure) {
-      throw new Error("__Host- Cookie must have Secure attributes");
-    }
-    if (opt.path !== "/") {
-      throw new Error('__Host- Cookie must have Path attributes with "/"');
-    }
-    if (opt.domain) {
-      throw new Error("__Host- Cookie must not have Domain attributes");
-    }
-  }
-  for (const key of ["domain", "path"]) {
-    if (opt[key] && /[;\r\n]/.test(opt[key])) {
-      throw new Error(`${key} must not contain ";", "\\r", or "\\n"`);
-    }
-  }
-  if (opt && typeof opt.maxAge === "number" && opt.maxAge >= 0) {
-    if (opt.maxAge > 3456e4) {
-      throw new Error(
-        "Cookies Max-Age SHOULD NOT be greater than 400 days (34560000 seconds) in duration.",
-      );
-    }
-    cookie += `; Max-Age=${opt.maxAge | 0}`;
-  }
-  if (opt.domain && opt.prefix !== "host") {
-    cookie += `; Domain=${opt.domain}`;
-  }
-  if (opt.path) {
-    cookie += `; Path=${opt.path}`;
-  }
-  if (opt.expires) {
-    if (opt.expires.getTime() - Date.now() > 3456e7) {
-      throw new Error(
-        "Cookies Expires SHOULD NOT be greater than 400 days (34560000 seconds) in the future.",
-      );
-    }
-    cookie += `; Expires=${opt.expires.toUTCString()}`;
-  }
-  if (opt.httpOnly) {
-    cookie += "; HttpOnly";
-  }
-  if (opt.secure) {
-    cookie += "; Secure";
-  }
-  if (opt.sameSite) {
-    cookie += `; SameSite=${opt.sameSite.charAt(0).toUpperCase() + opt.sameSite.slice(1)}`;
-  }
-  if (opt.priority) {
-    cookie += `; Priority=${opt.priority.charAt(0).toUpperCase() + opt.priority.slice(1)}`;
-  }
-  if (opt.partitioned) {
-    if (!opt.secure) {
-      throw new Error("Partitioned Cookie must have Secure attributes");
-    }
-    cookie += "; Partitioned";
-  }
-  return cookie;
-}, "_serialize");
-var serializeSigned = /* @__PURE__ */ __name(
-  async (name, value, secret, opt = {}) => {
-    const signature = await makeSignature(value, secret);
-    value = `${value}.${signature}`;
-    value = encodeURIComponent(value);
-    return _serialize(name, value, opt);
-  },
-  "serializeSigned",
-);
-
-// node_modules/hono/dist/helper/cookie/index.js
-var generateSignedCookie = /* @__PURE__ */ __name(
-  async (name, value, secret, opt) => {
-    let cookie;
-    if (opt?.prefix === "secure") {
-      cookie = await serializeSigned("__Secure-" + name, value, secret, {
-        path: "/",
-        ...opt,
-        secure: true,
-      });
-    } else if (opt?.prefix === "host") {
-      cookie = await serializeSigned("__Host-" + name, value, secret, {
-        ...opt,
-        path: "/",
-        secure: true,
-        domain: void 0,
-      });
-    } else {
-      cookie = await serializeSigned(name, value, secret, {
-        path: "/",
-        ...opt,
-      });
-    }
-    return cookie;
-  },
-  "generateSignedCookie",
-);
-
 // node_modules/hono/dist/utils/encode.js
 var decodeBase64Url = /* @__PURE__ */ __name((str) => {
   return decodeBase642(
@@ -9821,15 +9697,15 @@ var utf8Decoder = new TextDecoder();
 
 // node_modules/hono/dist/utils/jwt/jws.js
 async function signing(privateKey, alg, data) {
-  const algorithm2 = getKeyAlgorithm(alg);
-  const cryptoKey = await importPrivateKey(privateKey, algorithm2);
-  return await crypto.subtle.sign(algorithm2, cryptoKey, data);
+  const algorithm = getKeyAlgorithm(alg);
+  const cryptoKey = await importPrivateKey(privateKey, algorithm);
+  return await crypto.subtle.sign(algorithm, cryptoKey, data);
 }
 __name(signing, "signing");
 async function verifying(publicKey, alg, signature, data) {
-  const algorithm2 = getKeyAlgorithm(alg);
-  const cryptoKey = await importPublicKey(publicKey, algorithm2);
-  return await crypto.subtle.verify(algorithm2, cryptoKey, signature, data);
+  const algorithm = getKeyAlgorithm(alg);
+  const cryptoKey = await importPublicKey(publicKey, algorithm);
+  return await crypto.subtle.verify(algorithm, cryptoKey, signature, data);
 }
 __name(verifying, "verifying");
 function pemToBinary(pem) {
@@ -10279,17 +10155,6 @@ var decode3 = Jwt.decode;
 var sign2 = Jwt.sign;
 
 // src/server/helpers.ts
-var generateToken = /* @__PURE__ */ __name(async (userId, secret) => {
-  const now = Math.floor(Date.now() / 1e3);
-  const payload = {
-    sub: userId,
-    iat: now,
-    exp: now + 1 * 60 * 60,
-    //1 hour
-  };
-  const token = await sign2(payload, secret);
-  return token;
-}, "generateToken");
 var hashPassword = /* @__PURE__ */ __name(async (password) => {
   const encoder2 = new TextEncoder();
   const salt = crypto.getRandomValues(new Uint8Array(16));
@@ -10317,35 +10182,19 @@ app4.get("/", (c) => c.json("auth get endpoint"));
 app4.post("/", (c) => c.json("auth post endpoint"));
 app4.get("/email", (c) => c.json("auth get email endpoint"));
 app4.post("/signup", async (c) => {
-  console.log("console 1");
   const db = getDb(c.env.DB);
   const { email, password, confirmpassword } = await c.req.json();
-  console.log("console 2");
   if (!email || !password || !confirmpassword)
     return c.json({ error: "All fields are required!" }, 400);
   if (password !== confirmpassword)
     return c.json({ error: "Passwords do not match!!" });
   const hashedPassword = await hashPassword(password);
-  console.log("console 3");
   const id = crypto.randomUUID();
   try {
     const [users_instance] = await db
       .insert(users)
-      .values({ id, email: id, passwordHash: hashedPassword })
+      .values({ id, email, passwordHash: hashedPassword })
       .returning({ id: users.id });
-    const token = await generateToken(users_instance.id, c.env.JWT_SECRET);
-    console.log("console 4");
-    generateSignedCookie("Signed cookie", token, c.env.JWT_SECRET, {
-      path: "/",
-      //cookie is available to all routes
-      secure: c.env.ENVIRONMENT === "production",
-      httpOnly: true,
-      sameSite: "Strict",
-      //or Lax
-      maxAge: 1 * 60 * 60,
-      //1 hour
-    });
-    console.log("console 5");
     return c.json(
       {
         message: "User registered successfully",
@@ -10414,7 +10263,7 @@ var jsonError = /* @__PURE__ */ __name(
 );
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-Wgg60I/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-vbBHYj/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default,
@@ -10446,7 +10295,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-Wgg60I/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-vbBHYj/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
