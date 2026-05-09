@@ -17,8 +17,8 @@ export const users = sqliteTable("users", {
 
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
-    .default(sql`(uniexpoch())`),
+    .default(sql`(unixepoch())`),
   updatedAt: integer("updated_at", { mode: "timestamp" })
     .notNull()
-    .default(sql`(uniexpoch())`),
+    .default(sql`(unixepoch())`),
 });

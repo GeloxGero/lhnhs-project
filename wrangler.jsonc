@@ -6,6 +6,9 @@
     "directory": "./dist",
     "binding": "ASSETS"
   },
+  "secrets": {
+    "required": ["JWT_SECRET", "ENVIRONMENT"]
+  },
   "d1_databases": [
     {
       "binding": "DB",

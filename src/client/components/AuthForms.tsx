@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { CircleX } from "lucide-react";
+
 export const LoginForm = () => {
   return (
     <fieldset className="fieldset bg-base-200 border-base-300 rounded-box h-fit w-xs border p-4">
@@ -15,24 +18,94 @@ export const LoginForm = () => {
 };
 
 export const RegisterForm = () => {
+  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirmpassword") as string;
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match!");
+      return;
+    }
+
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, confirmPassword }),
+    });
+
+    if (!res.ok) {
+      const body = await res.json();
+      setError(body.error);
+      return;
+    }
+
+    window.location.href = "/";
+  };
+
   return (
-    <fieldset className="fieldset bg-base-200 border-base-300 rounded-box h-fit w-xs border p-4">
-      <legend className="fieldset-legend">Register</legend>
+    <form onSubmit={handleSubmit}>
+      <fieldset className="fieldset bg-base-200 border-base-300 rounded-box h-fit w-xs border p-4">
+        <legend className="fieldset-legend">Register</legend>
 
-      <label className="label">Email</label>
-      <input type="email" className="input" placeholder="Email" />
+        {error && (
+          <div role="alert" className="alert alert-error alert-soft">
+            <CircleX />
+            <span>{error}</span>
+          </div>
+        )}
 
-      <label className="label">Password</label>
-      <input type="password" className="input" placeholder="Password" />
+        <label className="label">Email</label>
+        <input
+          type="email"
+          name="email"
+          className="input"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
+          placeholder="Email"
+          required
+        />
 
-      <label className="label">Password</label>
-      <input
-        type="confirmpassword"
-        className="input"
-        placeholder="Confirm Password"
-      />
+        <label className="label">Password</label>
+        <input
+          type="password"
+          name="password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+          className="input"
+          placeholder="Password"
+          required
+        />
 
-      <button className="btn btn-neutral mt-4">Register</button>
-    </fieldset>
+        <label className="label">Confirm Password</label>
+        <input
+          type="password"
+          name="confirmpassword"
+          value={confirmPassword}
+          onChange={(e) => {
+            setConfirmPassword(e.target.value);
+          }}
+          className="input"
+          placeholder="Confirm Password"
+          required
+        />
+
+        <button type="submit" className="btn btn-neutral mt-4">
+          Register
+        </button>
+      </fieldset>
+    </form>
   );
 };

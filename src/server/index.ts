@@ -6,11 +6,13 @@ import generalExpenditureRoute from "./routes/generalExpeditureRoute";
 import expenseSummaryRoute from "./routes/expenseSummaryRoute";
 import authRoute from "./routes/authRoute";
 
-type Bindings = {
+export type EnvBindings = {
   DB: D1Database;
+  JWT_SECRET: string;
+  ENVIRONMENT: string;
 };
 
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<{ Bindings: EnvBindings }>();
 
 app.route("/api/users", userRoute);
 app.route("/api/generalExpenditure", generalExpenditureRoute);
