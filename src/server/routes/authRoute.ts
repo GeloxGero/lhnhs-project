@@ -19,10 +19,8 @@ app.get("/email", (c) => c.json("auth get email endpoint"));
 //idea is using zod, but hono has build in validation !!!check
 //Signs up the user, and then assigns them a token in their cookies
 app.post("/signup", async (c) => {
-  console.log("console 1");
   const db = getDb(c.env.DB);
   const { email, password, confirmpassword } = await c.req.json();
-  console.log("console 2");
 
   if (!email || !password || !confirmpassword)
     return c.json({ error: "All fields are required!" }, 400);
@@ -32,27 +30,24 @@ app.post("/signup", async (c) => {
 
   const hashedPassword = await hashPassword(password);
 
-  console.log("console 3");
   const id = crypto.randomUUID();
 
   try {
     const [users_instance] = await db
       .insert(users)
-      .values({ id: id, email: id, passwordHash: hashedPassword })
+      .values({ id: id, email: email, passwordHash: hashedPassword })
       .returning({ id: users.id });
 
-    const token = await generateToken(users_instance.id);
+    // const token = await generateToken(users_instance.id, c.env.JWT_SECRET);
 
-    console.log("console 4");
-    generateSignedCookie("Signed cookie", token, c.env.JWT_SECRET!, {
-      path: "/", //cookie is available to all routes
-      secure: c.env.ENVIRONMENT === "production",
-      httpOnly: true,
-      sameSite: "Strict", //or Lax
-      maxAge: 1 * 60 * 60, //1 hour
-    });
+    // generateSignedCookie("Signed cookie", token, c.env.JWT_SECRET!, {
+    //   path: "/", //cookie is available to all routes
+    //   secure: c.env.ENVIRONMENT === "production",
+    //   httpOnly: true,
+    //   sameSite: "Strict", //or Lax
+    //   maxAge: 1 * 60 * 60, //1 hour
+    // });
 
-    console.log("console 5");
     return c.json(
       {
         message: "User registered successfully",

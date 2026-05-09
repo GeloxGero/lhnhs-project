@@ -1,8 +1,6 @@
 import { sign } from "hono/jwt";
 
-export const generateToken = async (userId: string) => {
-  const secret = process.env.JWT_SECRET;
-
+export const generateToken = async (userId: string, secret: string) => {
   const now = Math.floor(Date.now() / 1000);
 
   const payload = {

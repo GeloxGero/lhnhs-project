@@ -21,17 +21,12 @@ export const RegisterForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [confirmpassword, setConfirmPassword] = useState<string>("");
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const confirmPassword = formData.get("confirmpassword") as string;
-
-    if (password !== confirmPassword) {
+    if (password !== confirmpassword) {
       setError("Passwords do not match!");
       return;
     }
@@ -39,7 +34,7 @@ export const RegisterForm = () => {
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, confirmPassword }),
+      body: JSON.stringify({ email, password, confirmpassword }),
     });
 
     if (!res.ok) {
@@ -93,7 +88,7 @@ export const RegisterForm = () => {
         <input
           type="password"
           name="confirmpassword"
-          value={confirmPassword}
+          value={confirmpassword}
           onChange={(e) => {
             setConfirmPassword(e.target.value);
           }}
