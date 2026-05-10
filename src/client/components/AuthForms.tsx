@@ -5,6 +5,7 @@ export const LoginForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [response, setResponse] = useState<string>("");
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,11 +22,13 @@ export const LoginForm = () => {
       return;
     }
 
+    setResponse(await res.json());
+    console.log(document.cookie);
     window.location.href = "/";
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form action="" onSubmit={handleSubmit}>
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box h-fit w-xs border p-4">
         <legend className="fieldset-legend">Login</legend>
 
@@ -92,7 +95,7 @@ export const RegisterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form action="" onSubmit={handleSubmit}>
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box h-fit w-xs border p-4">
         <legend className="fieldset-legend">Register</legend>
 

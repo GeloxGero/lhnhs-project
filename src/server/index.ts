@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import { accessAuth } from "./middleware/auth";
 import type { D1Database } from "@cloudflare/workers-types";
+import { cors } from "hono/cors";
+import { logger } from "hono/logger";
 import userRoute from "./routes/userRoute";
 import generalExpenditureRoute from "./routes/generalExpeditureRoute";
 import expenseSummaryRoute from "./routes/expenseSummaryRoute";
@@ -13,6 +15,22 @@ export type EnvBindings = {
 };
 
 const app = new Hono<{ Bindings: EnvBindings }>();
+
+app.use("/api/*", logger());
+
+// hono type cors middleware only relevant for development
+app.use("/api/*", async (c, next) => {
+  if (c.env.ENVIRONMENT === "development") {
+    const corsHandler = cors({
+      origin: "http://localhost:4321",
+      credentials: true,
+    });
+
+    return corsHandler(c, next);
+  }
+
+  return next();
+});
 
 app.route("/api/users", userRoute);
 app.route("/api/generalExpenditure", generalExpenditureRoute);

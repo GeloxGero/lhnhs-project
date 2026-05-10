@@ -1,0 +1,19 @@
+---
+import "../styles/global.css";
+import Navbar from "@/components/Navbar.astro";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <title>LHNHS</title>
+  </head>
+  <body>
+    <Navbar />
+    <slot />
+  </body>
+</html>

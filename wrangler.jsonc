@@ -9,6 +9,9 @@
   "secrets": {
     "required": ["JWT_SECRET"]
   },
+  "vars": {
+    "ENVIRONMENT": "development"
+  },
   "d1_databases": [
     {
       "binding": "DB",

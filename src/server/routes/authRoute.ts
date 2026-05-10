@@ -5,7 +5,8 @@ import { users } from "../db/schema/usersSchema.ts";
 import type { D1Database } from "@cloudflare/workers-types";
 import type { EnvBindings } from "../index.ts";
 import { generateToken, hashPassword, verifyPassword } from "../helpers.ts";
-import { setSignedCookie } from "hono/cookie";
+import { setCookie, setSignedCookie } from "hono/cookie";
+import { UserSearch } from "lucide-react";
 
 const app = new Hono<{ Bindings: EnvBindings }>();
 
@@ -19,11 +20,14 @@ app.post("/login", async (c) => {
   const db = getDb(c.env.DB);
   const { email, password } = await c.req.json();
 
+  console.log("Logging in");
   if (!email || !password)
     return c.json({ error: "All fields are required!" }, 400);
 
   try {
-    const user = await db.query.users.findFirst({ with: { email: email } });
+    const user = await db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.email, email),
+    });
     if (!user) return c.json({ error: `No user with email: ${email}found!` });
 
     const match = await verifyPassword(password, user.passwordHash);
@@ -32,14 +36,15 @@ app.post("/login", async (c) => {
     const token = await generateToken(user.id, c.env.JWT_SECRET);
 
     const isDevelopment = new URL(c.req.url).hostname === "localhost";
-    setSignedCookie(c, "signed-cookie", token, c.env.JWT_SECRET, {
-      path: "/", //cookie is available to all routes
+    await setCookie(c, "cookie", token, {
+      path: "/", //cookie is available to all   routes
       secure: !isDevelopment,
       httpOnly: true,
-      sameSite: "Strict", //or Lax
+      sameSite: "Lax", //or Strict
       maxAge: 1 * 60 * 60, //1 hour
     });
 
+    console.log("Logged in successfully");
     return c.json({ message: "Successful login", user: user.email });
   } catch (e) {
     return c.json({ error: "Internal server error \\ database error" });
@@ -76,7 +81,7 @@ app.post("/signup", async (c) => {
       path: "/", //cookie is available to all routes
       secure: !isDevelopment,
       httpOnly: true,
-      sameSite: "Strict", //or Lax
+      sameSite: "Lax", //or Strict
       maxAge: 1 * 60 * 60, //1 hour
     });
 
