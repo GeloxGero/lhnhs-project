@@ -23,8 +23,7 @@ export type EnvBindings = {
 const app = new Hono<{ Bindings: EnvBindings }>();
 
 //middlewares
-app.use("/api/*", logger());
-app.use("/api/*", localCors, accessAuth);
+app.use("/api/*", localCors, accessAuth, logger());
 app.use("/api/protected/*", jwtAuth);
 
 app.route("/api/protected/users", userRoute);

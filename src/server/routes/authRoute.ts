@@ -4,7 +4,7 @@ import { users } from "../db/schema/usersSchema.ts";
 
 import type { EnvBindings } from "../index.ts";
 import { generateToken, hashPassword, verifyPassword } from "../helpers.ts";
-import { setCookie, setSignedCookie } from "hono/cookie";
+import { deleteCookie, setCookie, setSignedCookie } from "hono/cookie";
 import { verify } from "hono/jwt";
 
 const app = new Hono<{ Bindings: EnvBindings }>();
@@ -96,12 +96,9 @@ app.post("/signup", async (c) => {
   }
 });
 
-app.post("verify_token", async (c) => {
-  const { token } = await c.req.json();
-  const decodedPayload = await verify(token, c.env.JWT_SECRET, "HS256");
-
-  console.log(decodedPayload);
-  return c.json({ message: "Successfully checked token" }, 200);
+app.post("logout", (c) => {
+  deleteCookie(c, "cookie", { path: "/" });
+  return c.json({ message: "User successfully logged out" }, 200);
 });
 
 export default app;
