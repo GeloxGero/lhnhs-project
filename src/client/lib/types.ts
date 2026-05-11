@@ -13,13 +13,6 @@ export interface GeneralExpenditureItem {
   month: string; // which month sheet it came from
 }
 
-export interface ParsedGeneralExpenditureItemsData {
-  regular: GeneralExpenditureItem[];
-  project_related: GeneralExpenditureItem[];
-  repair_and_maintenance: GeneralExpenditureItem[];
-  others: GeneralExpenditureItem[];
-}
-
 export type GeneralExpenditureCategory =
   | "regular"
   | "project_related"

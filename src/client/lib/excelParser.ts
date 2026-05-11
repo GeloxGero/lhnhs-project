@@ -3,12 +3,11 @@ import * as XLSX from "xlsx";
 import type {
   GeneralExpenditureCategory,
   GeneralExpenditureItem,
-  ParsedGeneralExpenditureItemsData,
 } from "./types";
 
 export const parseGeneralExpenditureSheet = (
   file: File,
-): Promise<ParsedGeneralExpenditureItemsData> => {
+): Promise<GeneralExpenditureItem[]> => {
   const OFF_KRA = 0;
   const OFF_SIP = 1;
   const OFF_PPA = 2;
@@ -45,12 +44,7 @@ export const parseGeneralExpenditureSheet = (
           cellStyles: false,
         });
 
-        const parsedData: ParsedGeneralExpenditureItemsData = {
-          regular: [],
-          project_related: [],
-          repair_and_maintenance: [],
-          others: [],
-        };
+        const parsedData: GeneralExpenditureItem[] = [];
 
         for (const sheetName of workbook.SheetNames) {
           const ws = workbook.Sheets[sheetName];
@@ -105,7 +99,7 @@ export const parseGeneralExpenditureSheet = (
                 month: sheetName,
               };
 
-              parsedData[category].push(item);
+              parsedData.push(item);
             }
           }
         }
