@@ -47,7 +47,8 @@
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.4",
     "tw-animate-css": "^1.4.0",
-    "wrangler": "^4.88.0"
+    "wrangler": "^4.88.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260508.1",
