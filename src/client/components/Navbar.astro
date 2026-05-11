@@ -1,6 +1,7 @@
 ---
 import { TextAlignStart, CircleUserRound } from "lucide-react";
 import { LogoutButton } from "@/components/LogoutButton";
+import { ToggleThemeButton } from "@/components/ToggleThemeButton";
 ---
 
 <div class="navbar">
@@ -25,6 +26,7 @@ import { LogoutButton } from "@/components/LogoutButton";
     <a class="btn btn-ghost text-xl">LHNHS</a>
   </div>
   <div class="navbar-end">
+    <ToggleThemeButton client:load />
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
         <CircleUserRound className="h-6 w-6" />

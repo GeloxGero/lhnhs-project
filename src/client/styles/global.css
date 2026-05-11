@@ -3,7 +3,8 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
-@custom-variant dark (&:is(.dark *));
 @plugin "daisyui" {
-  themes: luxury --default;
+  themes:
+    bumblebee --default,
+    luxury --prefersdark;
 }
