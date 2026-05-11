@@ -27,26 +27,27 @@ app.post("/login", async (c) => {
     const user = await db.query.users.findFirst({
       where: (users, { eq }) => eq(users.email, email),
     });
-    if (!user) return c.json({ error: `No user with email: ${email}found!` });
+    if (!user)
+      return c.json({ error: `No user with email: ${email}found!` }, 404);
 
     const match = await verifyPassword(password, user.passwordHash);
-    if (!match) return c.json({ error: "Invalid password!" });
+    if (!match) return c.json({ error: "Invalid password!" }, 401);
 
     const token = await generateToken(user.id, c.env.JWT_SECRET);
 
     const isDevelopment = new URL(c.req.url).hostname === "localhost";
     await setCookie(c, "cookie", token, {
-      path: "/", //cookie is available to all   routes
+      path: "/", //cookie is available to all routes
       secure: !isDevelopment,
       httpOnly: true,
-      sameSite: "Lax", //or Strict
+      sameSite: "Lax", //or Strict // or Lax
       maxAge: 1 * 60 * 60, //1 hour
     });
 
     console.log("Logged in successfully");
-    return c.json({ message: "Successful login", user: user.email });
+    return c.json({ message: "Successful login", user: user.email }, 200);
   } catch (e) {
-    return c.json({ error: "Internal server error \\ database error" });
+    return c.json({ error: "Internal server error \\ database error" }, 500);
   }
 });
 
@@ -61,7 +62,7 @@ app.post("/signup", async (c) => {
     return c.json({ error: "All fields are required!" }, 400);
 
   if (password !== confirmpassword)
-    return c.json({ error: "Passwords do not match!!" });
+    return c.json({ error: "Passwords do not match!!" }, 401);
 
   const hashedPassword = await hashPassword(password);
 
@@ -80,7 +81,7 @@ app.post("/signup", async (c) => {
       path: "/", //cookie is available to all routes
       secure: !isDevelopment,
       httpOnly: true,
-      sameSite: "Lax", //or Strict
+      sameSite: "Lax", //or Strict or Lax
       maxAge: 1 * 60 * 60, //1 hour
     });
 
@@ -92,7 +93,7 @@ app.post("/signup", async (c) => {
       201,
     );
   } catch (error) {
-    console.log(error);
+    return c.json({ error: "Internal Server Error" }, 500);
   }
 });
 

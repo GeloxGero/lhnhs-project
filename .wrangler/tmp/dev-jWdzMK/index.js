@@ -3305,6 +3305,11 @@ var setCookie = /* @__PURE__ */ __name((c, name, value, opt) => {
   const cookie = generateCookie(name, value, opt);
   c.header("Set-Cookie", cookie, { append: true });
 }, "setCookie");
+var deleteCookie = /* @__PURE__ */ __name((c, name, opt) => {
+  const deletedCookie = getCookie(c, name, opt?.prefix);
+  setCookie(c, name, "", { ...opt, maxAge: 0 });
+  return deletedCookie;
+}, "deleteCookie");
 
 // node_modules/hono/dist/utils/encode.js
 var decodeBase64Url = /* @__PURE__ */ __name((str) => {
@@ -10657,24 +10662,21 @@ app4.post("/signup", async (c) => {
     console.log(error);
   }
 });
-app4.post("verify_token", async (c) => {
-  const { token } = await c.req.json();
-  const decodedPayload = await verify2(token, c.env.JWT_SECRET, "HS256");
-  console.log(decodedPayload);
-  return c.json({ message: "Successfully checked token" }, 200);
+app4.post("logout", (c) => {
+  deleteCookie(c, "cookie", { path: "/" });
+  return c.json({ message: "User successfully logged out" }, 200);
 });
 var authRoute_default = app4;
 
 // src/server/index.ts
 var app5 = new Hono2();
-app5.use("/api/*", logger());
-app5.use("/api/*", localCors, accessAuth);
+app5.use("/api/*", localCors, accessAuth, logger());
 app5.use("/api/protected/*", jwtAuth);
 app5.route("/api/protected/users", userRoute_default);
 app5.route("/api/protected/generalExpenditure", generalExpeditureRoute_default);
 app5.route("/api/protected/expenseSummary", expenseSummaryRoute_default);
 app5.route("/api/auth", authRoute_default);
-app5.use(accessAuth).get("/api/health", (c) => c.json("Healthy! "));
+app5.get("/api/health", (c) => c.json("Healthy! "));
 var server_default = app5;
 
 // node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
@@ -10723,7 +10725,7 @@ var jsonError = /* @__PURE__ */ __name(
 );
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-3QFlLG/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-IAdV9z/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default,
@@ -10755,7 +10757,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-3QFlLG/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-IAdV9z/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
