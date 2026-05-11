@@ -8,7 +8,6 @@ import type { GeneralExpenditureItem } from "@/lib/types";
 export const ImportModal = () => {
   const [previewData, setPreviewData] = useState<GeneralExpenditureItem[]>();
   const [parsing, setParsing] = useState(false);
-  const [filteredData, setFilteredData] = useState<GeneralExpenditureItem[]>();
   const [monthChoice, setMonthChoice] = useState("January");
 
   const handleMonthChoice = (month: string) => {
@@ -26,6 +25,13 @@ export const ImportModal = () => {
     console.log(data);
   };
 
+  const filterData = () => {
+    return previewData!.filter(
+      (item) =>
+        item.month.toLocaleLowerCase() === monthChoice.toLocaleLowerCase(),
+    );
+  };
+
   return (
     <div>
       <ImportButton />
@@ -33,7 +39,7 @@ export const ImportModal = () => {
         {previewData ? (
           <div className="modal-box">
             <div> General Expense Table Preview</div>
-
+            <GeneralExpenditureTable data={filterData()} />
             <MonthButtons
               onClick={handleMonthChoice}
               activeMonth={monthChoice}
