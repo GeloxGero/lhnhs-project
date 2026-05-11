@@ -7,6 +7,8 @@ export const ServerStatus = () => {
     fetch("/api/health")
       .then((res) => res.json())
       .then((data) => setStatus(data));
+
+    fetch;
   }, []);
   return (
     <div>

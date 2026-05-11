@@ -2,11 +2,10 @@ import { Hono } from "hono";
 import { getDb } from "../db/db.ts";
 import { users } from "../db/schema/usersSchema.ts";
 
-import type { D1Database } from "@cloudflare/workers-types";
 import type { EnvBindings } from "../index.ts";
 import { generateToken, hashPassword, verifyPassword } from "../helpers.ts";
 import { setCookie, setSignedCookie } from "hono/cookie";
-import { UserSearch } from "lucide-react";
+import { verify } from "hono/jwt";
 
 const app = new Hono<{ Bindings: EnvBindings }>();
 
@@ -77,7 +76,7 @@ app.post("/signup", async (c) => {
     const token = await generateToken(users_instance.id, c.env.JWT_SECRET);
 
     const isDevelopment = new URL(c.req.url).hostname === "localhost";
-    setSignedCookie(c, "signed-cookie", token, c.env.JWT_SECRET!, {
+    setCookie(c, "cookie", token, {
       path: "/", //cookie is available to all routes
       secure: !isDevelopment,
       httpOnly: true,
@@ -95,6 +94,14 @@ app.post("/signup", async (c) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+app.post("verify_token", async (c) => {
+  const { token } = await c.req.json();
+  const decodedPayload = await verify(token, c.env.JWT_SECRET, "HS256");
+
+  console.log(decodedPayload);
+  return c.json({ message: "Successfully checked token" }, 200);
 });
 
 export default app;

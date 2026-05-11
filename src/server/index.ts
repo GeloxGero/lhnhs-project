@@ -1,8 +1,14 @@
+//dependency imports
 import { Hono } from "hono";
-import { accessAuth } from "./middleware/auth";
 import type { D1Database } from "@cloudflare/workers-types";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+
+//user imports
+import { accessAuth, jwtAuth } from "./middleware/auth";
+import { localCors } from "./middleware/cors";
+
+//route imports
 import userRoute from "./routes/userRoute";
 import generalExpenditureRoute from "./routes/generalExpeditureRoute";
 import expenseSummaryRoute from "./routes/expenseSummaryRoute";
@@ -16,27 +22,16 @@ export type EnvBindings = {
 
 const app = new Hono<{ Bindings: EnvBindings }>();
 
+//middlewares
 app.use("/api/*", logger());
+app.use("/api/*", localCors, accessAuth);
+app.use("/api/protected/*", jwtAuth);
 
-// hono type cors middleware only relevant for development
-app.use("/api/*", async (c, next) => {
-  if (c.env.ENVIRONMENT === "development") {
-    const corsHandler = cors({
-      origin: "http://localhost:4321",
-      credentials: true,
-    });
-
-    return corsHandler(c, next);
-  }
-
-  return next();
-});
-
-app.route("/api/users", userRoute);
-app.route("/api/generalExpenditure", generalExpenditureRoute);
-app.route("/api/expenseSummary", expenseSummaryRoute);
+app.route("/api/protected/users", userRoute);
+app.route("/api/protected/generalExpenditure", generalExpenditureRoute);
+app.route("/api/protected/expenseSummary", expenseSummaryRoute);
 app.route("/api/auth", authRoute);
 
-app.use(accessAuth).get("/api/health", (c) => c.json("Healthy! "));
+app.get("/api/health", (c) => c.json("Healthy! "));
 
 export default app;
