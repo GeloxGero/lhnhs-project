@@ -10,7 +10,7 @@ export interface GeneralExpenditureItem {
   accountTitle: string;
   accountCode: string;
   category: GeneralExpenditureCategory;
-  sheet: string; // which month sheet it came from
+  month: string; // which month sheet it came from
 }
 
 export interface ParsedGeneralExpenditureItemsData {

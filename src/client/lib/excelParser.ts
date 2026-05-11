@@ -102,7 +102,7 @@ export const parseGeneralExpenditureSheet = (
                 accountTitle: String(row[col + OFF_ACC_TITLE] ?? "").trim(),
                 accountCode: String(row[col + OFF_ACC_CODE] ?? "").trim(),
                 category,
-                sheet: sheetName,
+                month: sheetName,
               };
 
               parsedData[category].push(item);
