@@ -1,4 +1,4 @@
-import { logout } from "@/helpers";
+import { logout } from "@/lib/helpers";
 
 export const LogoutButton = () => {
   return (

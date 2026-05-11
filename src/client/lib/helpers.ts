@@ -1,9 +1,3 @@
-export const checkAuth = async () => {
-  const cookie = document.cookie;
-
-  console.log(cookie);
-};
-
 export const logout = async () => {
   await fetch("/api/auth/logout", {
     method: "POST",

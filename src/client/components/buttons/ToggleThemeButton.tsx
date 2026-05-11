@@ -9,7 +9,6 @@ export const ToggleThemeButton = () => {
     setIsDark(e.target.checked);
     localStorage.setItem("theme", theme);
     document.documentElement.setAttribute("data-theme", theme);
-    console.log(isDark);
   };
 
   return (
