@@ -1,7 +1,6 @@
 //dependency imports
 import { Hono } from "hono";
-import type { D1Database } from "@cloudflare/workers-types";
-import { cors } from "hono/cors";
+import type { Hyperdrive } from "@cloudflare/workers-types";
 import { logger } from "hono/logger";
 
 //user imports
@@ -15,7 +14,7 @@ import expenseSummaryRoute from "./routes/expenseSummaryRoute";
 import authRoute from "./routes/authRoute";
 
 export type EnvBindings = {
-  DB: D1Database;
+  HYPERDRIVE: Hyperdrive;
   JWT_SECRET: string;
   ENVIRONMENT: string;
 };

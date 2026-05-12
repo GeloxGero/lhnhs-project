@@ -15,11 +15,29 @@ app.get("/expenditure", (c) =>
   c.json('general expenditure "expenditure" endpoint'),
 );
 
-app.post("/batch_import", async (c) => {
+app.get("/get_by_year", (c) => {
+  const year = c.req.query("year");
+
   const db = getDb(c.env.DB);
+
+  return c.json({ message: "yeah" });
+});
+
+app.post("/batch_import", async (c) => {
+  const db = getDb(c.env.DB.connectionString);
   const { data } = await c.req.json();
 
-  return c.json({ message: "batch_import api reached", data: data });
+  const ids = await db
+    .insert(general_expenditure)
+    .values(data)
+    .returning({ id: general_expenditure.id });
+
+  return c.json(
+    {
+      message: `successfully imported ${ids.length} rows`,
+    },
+    201,
+  );
 });
 
 export default app;

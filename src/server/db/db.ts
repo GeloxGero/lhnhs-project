@@ -1,7 +1,9 @@
-import { drizzle } from "drizzle-orm/d1";
-import type { D1Database } from "@cloudflare/workers-types";
+import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "./schema/indexSchema";
+import { Client } from "pg";
 
-export const getDb = (binding: D1Database) => {
-  return drizzle(binding, { schema });
+export const getDb = async (connectionString: string) => {
+  const client = new Client({ connectionString: connectionString });
+  await client.connect();
+  return drizzle(client);
 };

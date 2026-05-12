@@ -23,6 +23,8 @@ export const GeneralExpenditureImportButton = ({
   year,
   isYearValid,
 }: ImportButtonProps) => {
+  data = data.map((item) => ({ ...item, year }));
+
   return (
     <button
       className={`btn btn-soft btn-primary`}

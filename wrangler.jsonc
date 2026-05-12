@@ -2,6 +2,7 @@
   "name": "lhnhs-project",
   "main": "src/server/index.ts",
   "compatibility_date": "2026-05-06",
+  "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS"
@@ -12,16 +13,16 @@
   "vars": {
     "ENVIRONMENT": "development"
   },
-  "d1_databases": [
+  "hyperdrive": [
     {
-      "binding": "DB",
-      "database_name": "lhnhs-project-local-database",
-      "database_id": "123",
-      "migrations_dir": "./src/server/db/migrations"
+      "binding": "HYPERDRIVE",
+      "id": "0fa663acc0554e93b4821ed9baf4f436",
+      "localConnectionString": "postgresql://postgres:yDoN8*squPMFzVQ3d5Y$f#e7oMjmfpbdtAxgXq8*gNcwJ%BhUp@localhost:5432/lhnhs-local"
     }
   ],
   "env": {
     "staging": {
+      "compatibility_flags": ["nodejs_compat"],
       "secrets": {
         "required": ["JWT_SECRET"]
       },
@@ -30,12 +31,10 @@
         "POLICY_AUD": "7ce4c6aa814de63172705a54f589a6d4f968fbd550c18630e2cd1c48ac2cae8a",
         "CLOUDFLARE_ACCESS_DOMAIN": "https://gelo12gero.cloudflareaccess.com"
       },
-      "d1_databases": [
+      "hyperdrive": [
         {
-          "binding": "DB",
-          "database_name": "lhnhs-project-staging-database",
-          "database_id": "f2efdce9-67df-42ac-9d7e-aa3b4d223fc0",
-          "migrations_dir": "./src/server/db/migrations"
+          "binding": "HYPERDRIVE",
+          "id": "0fa663acc0554e93b4821ed9baf4f436"
         }
       ],
       "observability": {

@@ -61,7 +61,7 @@ export const ImportModal = () => {
                 onChange={handleYearChanged}
                 required
               />
-              <p className="validator-hint">Are you sure?</p>
+              <p className="validator-hint">Invalid Year</p>
             </fieldset>
             <div className="flex justify-between">
               <GeneralExpenditureImportButton

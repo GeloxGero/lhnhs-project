@@ -4,23 +4,9 @@
   "entries": [
     {
       "idx": 0,
-      "version": "6",
-      "when": 1778217145669,
-      "tag": "0000_public_puma",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1778258327755,
-      "tag": "0001_moaning_drax",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1778472325698,
-      "tag": "0002_brown_robin_chapel",
+      "version": "7",
+      "when": 1778602526118,
+      "tag": "0000_breezy_iceman",
       "breakpoints": true
     }
   ]
