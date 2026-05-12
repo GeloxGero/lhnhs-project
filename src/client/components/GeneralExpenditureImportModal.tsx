@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ImportButton } from "./buttons/ImportButton";
+import { GeneralExpenditureModalButton } from "./buttons/GeneralExpenditureButtons";
 import { GeneralExpenditureTable } from "@/components/tables/GeneralExpenditureTable";
 import { parseGeneralExpenditureSheet } from "@/lib/excelParser";
 import { MonthButtons } from "./MonthButtons";
@@ -34,16 +34,19 @@ export const ImportModal = () => {
 
   return (
     <div>
-      <ImportButton />
+      <GeneralExpenditureModalButton />
       <dialog id="import_modal" className="modal">
         {previewData ? (
-          <div className="modal-box">
-            <div> General Expense Table Preview</div>
-            <GeneralExpenditureTable data={filterData()} />
+          <div className="modal-box h-screen max-w-screen">
             <MonthButtons
               onClick={handleMonthChoice}
               activeMonth={monthChoice}
             />
+            <h3 className="justify-self-center py-4">
+              {" "}
+              General Expense Table Preview
+            </h3>
+            <GeneralExpenditureTable data={filterData()} />
           </div>
         ) : (
           <div className="modal-box">

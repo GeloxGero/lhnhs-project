@@ -91,7 +91,10 @@ export const parseGeneralExpenditureSheet = (
                 resourcesDescription: String(
                   row[col + OFF_RES_DESC] ?? "",
                 ).trim(),
-                resourcesQuantity: String(row[col + OFF_QTY] ?? "").trim(),
+                resourcesQuantity:
+                  parseInt(
+                    String(row[col + OFF_QTY] ?? "").replace(/[,\s]/g, ""),
+                  ) || 0,
                 estimatedCost: cost,
                 accountTitle: String(row[col + OFF_ACC_TITLE] ?? "").trim(),
                 accountCode: String(row[col + OFF_ACC_CODE] ?? "").trim(),

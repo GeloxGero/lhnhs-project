@@ -1,4 +1,4 @@
-export const ImportButton = () => {
+export const GeneralExpenditureModalButton = () => {
   const handleImportButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     (document.getElementById("import_modal") as HTMLDialogElement)?.showModal();
   };
@@ -9,3 +9,5 @@ export const ImportButton = () => {
     </button>
   );
 };
+
+export const GeneralExpenditureImportButton = () => {};

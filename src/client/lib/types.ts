@@ -5,7 +5,7 @@ export interface GeneralExpenditureItem {
   purpose: string;
   indicator: string;
   resourcesDescription: string;
-  resourcesQuantity: string;
+  resourcesQuantity: number;
   estimatedCost: number;
   accountTitle: string;
   accountCode: string;
