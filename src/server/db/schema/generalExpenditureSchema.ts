@@ -27,3 +27,4 @@ export const general_expenditure = sqliteTable("general_expenditure", {
 });
 
 export type NewGeneralExpenditure = typeof general_expenditure.$inferInsert;
+export type GetGeneralExpenditure = typeof general_expenditure.$inferSelect;

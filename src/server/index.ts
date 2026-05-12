@@ -27,8 +27,8 @@ app.use("/api/*", localCors, accessAuth, logger());
 app.use("/api/protected/*", jwtAuth);
 
 app.route("/api/protected/users", userRoute);
-app.route("/api/protected/generalExpenditure", generalExpenditureRoute);
-app.route("/api/protected/expenseSummary", expenseSummaryRoute);
+app.route("/api/protected/general_expenditure", generalExpenditureRoute);
+app.route("/api/protected/expense_summary", expenseSummaryRoute);
 app.route("/api/auth", authRoute);
 
 app.get("/api/health", (c) => c.json("Healthy! "));

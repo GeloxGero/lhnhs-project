@@ -12,6 +12,8 @@ export const ImportModal = () => {
   const [previewData, setPreviewData] = useState<GeneralExpenditureItem[]>();
   const [parsing, setParsing] = useState(false);
   const [monthChoice, setMonthChoice] = useState("January");
+  const [yearChoice, setYearChoice] = useState<number>(1850);
+  const [isYearValid, setIsYearValid] = useState<boolean>(false);
 
   const handleMonthChoice = (month: string) => {
     setMonthChoice(month);
@@ -34,14 +36,39 @@ export const ImportModal = () => {
     );
   };
 
+  const handleYearChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const year = e.target.valueAsNumber;
+    setYearChoice(year);
+
+    setIsYearValid(year! >= 1900 && year! <= 2030);
+  };
+
   return (
     <div>
       <GeneralExpenditureModalButton />
       <dialog id="import_modal" className="modal">
         {previewData ? (
           <div className="modal-box h-screen max-w-screen">
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Year</legend>
+              <input
+                type="number"
+                className="input validator"
+                placeholder="Year of this table"
+                min={1900}
+                max={2030}
+                value={yearChoice}
+                onChange={handleYearChanged}
+                required
+              />
+              <p className="validator-hint">Are you sure?</p>
+            </fieldset>
             <div className="flex justify-between">
-              <GeneralExpenditureImportButton />
+              <GeneralExpenditureImportButton
+                isYearValid={isYearValid}
+                data={previewData}
+                year={yearChoice!}
+              />
               <MonthButtons
                 onClick={handleMonthChoice}
                 activeMonth={monthChoice}

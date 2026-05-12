@@ -1,3 +1,5 @@
+import type { GeneralExpenditureItem } from "@/lib/types";
+
 export const GeneralExpenditureModalButton = () => {
   const handleImportButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     (document.getElementById("import_modal") as HTMLDialogElement)?.showModal();
@@ -10,8 +12,37 @@ export const GeneralExpenditureModalButton = () => {
   );
 };
 
-export const GeneralExpenditureImportButton = () => {
-  return <button className="btn btn-soft btn-primary">Import Tables</button>;
+type ImportButtonProps = {
+  year: number;
+  data: GeneralExpenditureItem[];
+  isYearValid: boolean;
+};
+
+export const GeneralExpenditureImportButton = ({
+  data,
+  year,
+  isYearValid,
+}: ImportButtonProps) => {
+  return (
+    <button
+      className={`btn btn-soft btn-primary`}
+      disabled={!isYearValid}
+      onClick={async () => {
+        const res = await fetch(
+          "/api/protected/general_expenditure/batch_import",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data }),
+          },
+        );
+
+        console.log(await res.json());
+      }}
+    >
+      Import Tables
+    </button>
+  );
 };
 
 interface MonthButtonsProps {
