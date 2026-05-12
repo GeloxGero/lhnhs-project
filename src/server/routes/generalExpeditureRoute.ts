@@ -9,4 +9,8 @@ app.get("/expenditure", (c) =>
   c.json('general expenditure "expenditure" endpoint'),
 );
 
+app.post("/batch_import", (c) => {
+  return c.json({ message: "Api reached" });
+});
+
 export default app;

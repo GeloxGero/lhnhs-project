@@ -10,7 +10,7 @@ const ExpenditureTable = ({ title, data }: SubTableProps) => {
 
   return (
     <div className="mb-6">
-      <h4 className="badge badge-soft badge-default my-5">{title}</h4>
+      <h4 className="badge badge-soft badge-info my-5">{title}</h4>
       <div className="overflow-x-auto">
         <table className="table-xs table">
           <thead>

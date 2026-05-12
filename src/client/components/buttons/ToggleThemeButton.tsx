@@ -5,7 +5,7 @@ export const ToggleThemeButton = () => {
   const [isDark, setIsDark] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const theme = e.target.checked ? "synthwave" : "luxury";
+    const theme = e.target.checked ? "silk" : "abyss";
     setIsDark(e.target.checked);
     localStorage.setItem("theme", theme);
     document.documentElement.setAttribute("data-theme", theme);
@@ -17,6 +17,7 @@ export const ToggleThemeButton = () => {
         type="checkbox"
         className="theme-controller"
         value="synthwave"
+        checked={isDark}
         onChange={handleChange}
       />
 

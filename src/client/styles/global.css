@@ -5,6 +5,6 @@
 
 @plugin "daisyui" {
   themes:
-    bumblebee --default,
-    luxury --prefersdark;
+    silk --default,
+    abyss --prefersdark;
 }

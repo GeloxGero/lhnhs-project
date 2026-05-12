@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { GeneralExpenditureModalButton } from "./buttons/GeneralExpenditureButtons";
+import {
+  GeneralExpenditureModalButton,
+  MonthButtons,
+  GeneralExpenditureImportButton,
+} from "./buttons/GeneralExpenditureButtons";
 import { GeneralExpenditureTable } from "@/components/tables/GeneralExpenditureTable";
 import { parseGeneralExpenditureSheet } from "@/lib/excelParser";
-import { MonthButtons } from "./MonthButtons";
 import type { GeneralExpenditureItem } from "@/lib/types";
 
 export const ImportModal = () => {
@@ -22,7 +25,6 @@ export const ImportModal = () => {
     const data = await parseGeneralExpenditureSheet(file);
     setParsing(false);
     setPreviewData(data);
-    console.log(data);
   };
 
   const filterData = () => {
@@ -38,10 +40,14 @@ export const ImportModal = () => {
       <dialog id="import_modal" className="modal">
         {previewData ? (
           <div className="modal-box h-screen max-w-screen">
-            <MonthButtons
-              onClick={handleMonthChoice}
-              activeMonth={monthChoice}
-            />
+            <div className="flex justify-between">
+              <GeneralExpenditureImportButton />
+              <MonthButtons
+                onClick={handleMonthChoice}
+                activeMonth={monthChoice}
+              />
+            </div>
+
             <h3 className="justify-self-center py-4">
               {" "}
               General Expense Table Preview
