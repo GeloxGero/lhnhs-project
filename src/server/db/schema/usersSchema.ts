@@ -7,6 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const users_schema = pgSchema("users_schema");
+
 export const roles = users_schema.enum("role", ["user", "admin", "moderator"]);
 
 export const users = users_schema.table("users", {

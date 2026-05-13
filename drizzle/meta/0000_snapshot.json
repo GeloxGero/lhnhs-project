@@ -1,5 +1,5 @@
 {
-  "id": "7bf649fe-8d66-4778-80af-2f6440a7ab25",
+  "id": "bf842990-236f-421a-acd0-e8639806da3e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -216,7 +216,6 @@
     }
   },
   "schemas": {
-    "general_expenditure_schema": "general_expenditure_schema",
     "users_schema": "users_schema"
   },
   "sequences": {},

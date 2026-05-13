@@ -20,9 +20,7 @@ pnpm-debug.log*
 .dev.vars
 
 
-#drizzle config files
-drizzle-dev.config.ts
-drizzle-staging.config.ts
+
 
 
 # macOS-specific files

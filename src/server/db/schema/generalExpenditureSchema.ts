@@ -8,7 +8,9 @@ import {
   pgSchema,
 } from "drizzle-orm/pg-core";
 
-const general_expenditure_schema = pgSchema("general_expenditure_schema");
+export const general_expenditure_schema = pgSchema(
+  "general_expenditure_schema",
+);
 
 export const general_expenditure = general_expenditure_schema.table(
   "general_expenditure",
