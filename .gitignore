@@ -20,7 +20,10 @@ pnpm-debug.log*
 .dev.vars
 
 
-
+#drizzle migration config files
+drizzle.local.config.ts
+drizzle.staging.config.ts
+drizzle.production.config.ts
 
 
 # macOS-specific files
