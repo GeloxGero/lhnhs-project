@@ -194,9 +194,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -208,11 +206,7 @@
     "users_schema.role": {
       "name": "role",
       "schema": "users_schema",
-      "values": [
-        "user",
-        "admin",
-        "moderator"
-      ]
+      "values": ["user", "admin", "moderator"]
     }
   },
   "schemas": {
