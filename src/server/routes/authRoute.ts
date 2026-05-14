@@ -4,7 +4,7 @@ import { users } from "../db/schema/usersSchema.ts";
 
 import type { EnvBindings } from "../index.ts";
 import { generateToken, hashPassword, verifyPassword } from "../helpers.ts";
-import { deleteCookie, setCookie, setSignedCookie } from "hono/cookie";
+import { deleteCookie, setCookie } from "hono/cookie";
 import { verify } from "hono/jwt";
 
 const app = new Hono<{ Bindings: EnvBindings }>();
@@ -16,7 +16,7 @@ app.post("/", (c) => c.json("auth post endpoint"));
 app.get("/email", (c) => c.json("auth get email endpoint"));
 
 app.post("/login", async (c) => {
-  const db = getDb(c.env.DB);
+  const db = getDb(c.env.HYPERDRIVE.connectionString);
   const { email, password } = await c.req.json();
 
   console.log("Logging in");
@@ -55,7 +55,7 @@ app.post("/login", async (c) => {
 //idea is using zod, but hono has build in validation !!!check
 //Signs up the user, and then assigns them a token in their cookies
 app.post("/signup", async (c) => {
-  const db = getDb(c.env.DB);
+  const db = getDb(c.env.HYPERDRIVE.connectionString);
   const { email, password, confirmpassword } = await c.req.json();
 
   if (!email || !password || !confirmpassword)
@@ -71,7 +71,7 @@ app.post("/signup", async (c) => {
   try {
     const [users_instance] = await db
       .insert(users)
-      .values({ id: id, email: email, passwordHash: hashedPassword })
+      .values({ email: email, passwordHash: hashedPassword })
       .returning({ id: users.id });
 
     const token = await generateToken(users_instance.id, c.env.JWT_SECRET);

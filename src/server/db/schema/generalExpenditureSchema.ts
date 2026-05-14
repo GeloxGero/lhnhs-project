@@ -5,9 +5,10 @@ import {
   timestamp,
   numeric,
   serial,
+  pgTable,
 } from "drizzle-orm/pg-core";
 
-import { app_schema } from "./indexSchema";
+import { app_schema } from "./app_schema";
 
 export const general_expenditure = app_schema.table("general_expenditure", {
   id: serial().primaryKey(),
@@ -23,9 +24,9 @@ export const general_expenditure = app_schema.table("general_expenditure", {
   purpose: text("purpose"),
   resourcesDescription: text("resources_description"),
   resourcesQuantity: integer("resources_quantity"),
-  arCode: text("ar_code"),
-  isActive: boolean().notNull().default(true),
+  arCode: serial("ar_code").unique().notNull(),
+  isActive: boolean("is_active").notNull().default(true),
 
-  createdAt: timestamp().defaultNow(),
-  updatedAt: timestamp().defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });

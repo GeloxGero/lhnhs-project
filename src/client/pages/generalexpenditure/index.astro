@@ -1,19 +1,17 @@
 ---
 import AuthenticatedLayout from "../../layouts/AuthenticatedLayout.astro";
-import Table from "../../components/tables/Table.astro";
+import { GeneralExpenditureContent } from "../../components/GeneralExpenditureContent";
 import { ImportModal } from "@/components/GeneralExpenditureImportModal";
+
+export const prerender = true;
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <AuthenticatedLayout>
-  <h1 class="flex items-center justify-center">General Expenditure</h1>
-
   <div>
     <ImportModal client:load />
   </div>
-  <div class="px-1.5 py-32">
-    <Table />
-  </div>
+  <GeneralExpenditureContent client:load />
 </AuthenticatedLayout>

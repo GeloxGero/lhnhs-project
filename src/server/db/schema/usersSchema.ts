@@ -1,6 +1,6 @@
 import { text, serial, boolean, timestamp } from "drizzle-orm/pg-core";
 
-import { app_schema } from "./indexSchema";
+import { app_schema } from "./app_schema";
 
 export const user_roles = app_schema.enum("role", [
   "user",

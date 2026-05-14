@@ -17,7 +17,7 @@
     {
       "binding": "HYPERDRIVE",
       "id": "0fa663acc0554e93b4821ed9baf4f436",
-      "localConnectionString": "postgresql://postgres:yDoN8*squPMFzVQ3d5Y$f#e7oMjmfpbdtAxgXq8*gNcwJ%BhUp@localhost:5432/lhnhs-local"
+      "localConnectionString": "postgresql://postgres:vZuAmeigjHTVRgfXGWuua9a9gF3Eijz3idMqjmSkETGxzHC69d@localhost:5432/lhnhs-local"
     }
   ],
   "env": {

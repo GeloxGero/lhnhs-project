@@ -3,9 +3,10 @@ import type { GeneralExpenditureItem } from "@/lib/types";
 interface SubTableProps {
   title: string;
   data: GeneralExpenditureItem[];
+  isPreview: boolean;
 }
 
-const ExpenditureTable = ({ title, data }: SubTableProps) => {
+const ExpenditureTable = ({ title, data, isPreview }: SubTableProps) => {
   if (data.length === 0) return null;
 
   return (
@@ -26,6 +27,7 @@ const ExpenditureTable = ({ title, data }: SubTableProps) => {
               <th>Estimated Cost</th>
               <th>Account Title</th>
               <th>Account Code</th>
+              {isPreview && <th>Ar Code</th>}
             </tr>
           </thead>
           <tbody>
@@ -42,6 +44,13 @@ const ExpenditureTable = ({ title, data }: SubTableProps) => {
                 <td>{item.estimatedCost}</td>
                 <td>{item.accountTitle}</td>
                 <td>{item.accountCode}</td>
+                {isPreview && (
+                  <a href={`/generalexpenditure/expenditures/${item.arCode}`}>
+                    <span className="badge badge-info hover:cursor-pointer">
+                      {item.arCode}
+                    </span>
+                  </a>
+                )}
               </tr>
             ))}
           </tbody>
@@ -53,6 +62,7 @@ const ExpenditureTable = ({ title, data }: SubTableProps) => {
 
 interface Props {
   data: GeneralExpenditureItem[];
+  isPreview: boolean;
 }
 
 export const GeneralExpenditureTable = ({ data }: Props) => {
@@ -71,6 +81,7 @@ export const GeneralExpenditureTable = ({ data }: Props) => {
             key={key}
             title={label}
             data={data.filter((item) => item.category === key)}
+            isPreview
           />
         );
       })}

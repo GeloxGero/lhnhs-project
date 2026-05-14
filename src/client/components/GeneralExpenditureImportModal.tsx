@@ -76,10 +76,9 @@ export const ImportModal = () => {
             </div>
 
             <h3 className="justify-self-center py-4">
-              {" "}
               General Expense Table Preview
             </h3>
-            <GeneralExpenditureTable data={filterData()} />
+            <GeneralExpenditureTable data={filterData()} isPreview={true} />
           </div>
         ) : (
           <div className="modal-box">

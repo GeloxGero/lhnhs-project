@@ -1,12 +1,12 @@
 {
-  "id": "7bf649fe-8d66-4778-80af-2f6440a7ab25",
+  "id": "9466b96b-ee40-484d-a734-8eefee43df1f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "general_expenditure_schema.general_expenditure": {
+    "app_schema.general_expenditure": {
       "name": "general_expenditure",
-      "schema": "general_expenditure_schema",
+      "schema": "app_schema",
       "columns": {
         "id": {
           "name": "id",
@@ -88,26 +88,26 @@
         },
         "ar_code": {
           "name": "ar_code",
-          "type": "text",
+          "type": "serial",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "isActive": {
-          "name": "isActive",
+        "is_active": {
+          "name": "is_active",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
           "default": true
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
@@ -117,14 +117,22 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "general_expenditure_ar_code_unique": {
+          "name": "general_expenditure_ar_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "ar_code"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "users_schema.users": {
+    "app_schema.users": {
       "name": "users",
-      "schema": "users_schema",
+      "schema": "app_schema",
       "columns": {
         "id": {
           "name": "id",
@@ -153,7 +161,7 @@
         "role": {
           "name": "role",
           "type": "role",
-          "typeSchema": "users_schema",
+          "typeSchema": "app_schema",
           "primaryKey": false,
           "notNull": true,
           "default": "'user'"
@@ -205,9 +213,9 @@
     }
   },
   "enums": {
-    "users_schema.role": {
+    "app_schema.role": {
       "name": "role",
-      "schema": "users_schema",
+      "schema": "app_schema",
       "values": [
         "user",
         "admin",
@@ -216,8 +224,7 @@
     }
   },
   "schemas": {
-    "general_expenditure_schema": "general_expenditure_schema",
-    "users_schema": "users_schema"
+    "app_schema": "app_schema"
   },
   "sequences": {},
   "roles": {},
