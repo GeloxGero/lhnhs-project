@@ -3,10 +3,6 @@
   "main": "src/server/index.ts",
   "compatibility_date": "2026-05-06",
   "compatibility_flags": ["nodejs_compat"],
-  "assets": {
-    "directory": "./dist",
-    "binding": "ASSETS"
-  },
   "secrets": {
     "required": ["JWT_SECRET"]
   },
@@ -36,22 +32,7 @@
           "binding": "HYPERDRIVE",
           "id": "0fa663acc0554e93b4821ed9baf4f436"
         }
-      ],
-      "observability": {
-        "enabled": false,
-        "head_sampling_rate": 1,
-        "logs": {
-          "enabled": true,
-          "head_sampling_rate": 1,
-          "persist": true,
-          "invocation_logs": true
-        },
-        "traces": {
-          "enabled": false,
-          "persist": true,
-          "head_sampling_rate": 1
-        }
-      }
+      ]
     },
     "production": {
       "secrets": {

@@ -6,8 +6,8 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "client": "astro dev",
-    "build:client": "astro build",
+    "client": "bun run --bun astro dev",
+    "build:client": "bun run --bun astro build",
     "preview": "astro preview",
     "astro": "astro",
     "format": "prettier --write .",
