@@ -1,4 +1,6 @@
 import type { GeneralExpenditureItem } from "@/lib/types";
+import { ARCodeModal } from "../modals/ARCodeModal";
+import { onClickShowModal } from "@/lib/helpers";
 
 interface SubTableProps {
   title: string;
@@ -45,11 +47,15 @@ const ExpenditureTable = ({ title, data, isPreview }: SubTableProps) => {
                 <td>{item.accountTitle}</td>
                 <td>{item.accountCode}</td>
                 {isPreview && (
-                  <a href={`/generalexpenditure/expenditures/${item.arCode}`}>
-                    <span className="badge badge-info hover:cursor-pointer">
+                  <td>
+                    <span
+                      className="badge badge-info hover:cursor-pointer"
+                      onClick={onClickShowModal("ar_code_modal")}
+                    >
                       {item.arCode}
+                      <ARCodeModal arCode={item.arCode!} />
                     </span>
-                  </a>
+                  </td>
                 )}
               </tr>
             ))}
