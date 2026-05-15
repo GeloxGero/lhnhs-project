@@ -12,3 +12,8 @@ export const onClickShowModal =
   (modalId: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     (document.getElementById(modalId) as HTMLDialogElement)?.showModal();
   };
+
+export const onClickHideModal =
+  (modalId: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    (document.getElementById(modalId) as HTMLDialogElement)?.close();
+  };

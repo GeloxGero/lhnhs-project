@@ -50,10 +50,10 @@ const ExpenditureTable = ({ title, data, isPreview }: SubTableProps) => {
                   <td>
                     <span
                       className="badge badge-info hover:cursor-pointer"
-                      onClick={onClickShowModal("ar_code_modal")}
+                      onClick={onClickShowModal(`ar_code_modal_${index}`)}
                     >
                       {item.arCode}
-                      <ARCodeModal arCode={item.arCode!} />
+                      <ARCodeModal item={item} index={index} />
                     </span>
                   </td>
                 )}
