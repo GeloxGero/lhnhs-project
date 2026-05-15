@@ -7,3 +7,8 @@ export const logout = async () => {
 
   window.location.href = "/auth/login";
 };
+
+export const onClickShowModal =
+  (modalId: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    (document.getElementById(modalId) as HTMLDialogElement)?.showModal();
+  };

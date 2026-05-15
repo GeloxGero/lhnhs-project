@@ -1,17 +1,5 @@
 import type { GeneralExpenditureItem } from "@/lib/types";
 
-export const GeneralExpenditureModalButton = () => {
-  const handleImportButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    (document.getElementById("import_modal") as HTMLDialogElement)?.showModal();
-  };
-
-  return (
-    <button className="btn btn-primary" onClick={handleImportButtonClick}>
-      Import Tables
-    </button>
-  );
-};
-
 type ImportButtonProps = {
   year: number;
   data: GeneralExpenditureItem[];

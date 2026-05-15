@@ -1,12 +1,12 @@
 import { useState } from "react";
 import {
-  GeneralExpenditureModalButton,
   MonthButtons,
   GeneralExpenditureImportButton,
 } from "./buttons/GeneralExpenditureButtons";
 import { GeneralExpenditureTable } from "@/components/tables/GeneralExpenditureTable";
 import { parseGeneralExpenditureSheet } from "@/lib/excelParser";
 import type { GeneralExpenditureItem } from "@/lib/types";
+import { onClickShowModal } from "@/lib/helpers";
 
 export const ImportModal = () => {
   const [previewData, setPreviewData] = useState<GeneralExpenditureItem[]>();
@@ -45,7 +45,12 @@ export const ImportModal = () => {
 
   return (
     <div>
-      <GeneralExpenditureModalButton />
+      <button
+        className="btn btn-primary"
+        onClick={onClickShowModal("import_modal")}
+      >
+        Import Tables
+      </button>
       <dialog id="import_modal" className="modal">
         {previewData ? (
           <div className="modal-box h-screen max-w-screen">
