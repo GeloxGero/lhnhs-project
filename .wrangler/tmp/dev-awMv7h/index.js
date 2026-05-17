@@ -17434,7 +17434,7 @@ var users = app_schema.table("users", {
 // src/server/db/schema/generalExpenditureSchema.ts
 init_modules_watch_stub();
 var general_expenditure = app_schema.table("general_expenditure", {
-  id: serial().primaryKey(),
+  id: serial("id").primaryKey(),
   accountCode: text("account_code"),
   accountTitle: text("account_title"),
   activity: text("activity"),

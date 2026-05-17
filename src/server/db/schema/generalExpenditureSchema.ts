@@ -5,13 +5,12 @@ import {
   timestamp,
   numeric,
   serial,
-  pgTable,
 } from "drizzle-orm/pg-core";
 
 import { app_schema } from "./app_schema";
 
 export const general_expenditure = app_schema.table("general_expenditure", {
-  id: serial().primaryKey(),
+  id: serial("id").primaryKey(),
   accountCode: text("account_code"),
   accountTitle: text("account_title"),
   activity: text("activity"),

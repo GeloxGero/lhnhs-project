@@ -15,8 +15,7 @@ const kraColor = (kra: string) => {
 };
 
 const kraBadgeColor = (kra: string) => {
-  if (kra.includes("KRA 1"))
-    return "bg-cyan-400/10 text-cyan-400 ring-cyan-400/30";
+  if (kra.includes("KRA 1")) return "bg-cyan-400/10   ring-cyan-400/30";
   if (kra.includes("KRA 2"))
     return "bg-teal-400/10 text-teal-400 ring-teal-400/30";
   if (kra.includes("KRA 3"))
@@ -28,7 +27,7 @@ const ExpenditureTable = ({ title, data, isPreview }: SubTableProps) => {
   if (data.length === 0) return null;
 
   return (
-    <div className="mb-6">
+    <div className="mb-6 rounded-3xl px-3">
       <h4 className="badge badge-soft badge-info my-5">{title}</h4>
       <div className="overflow-x-auto">
         <table className="table-xs table">
@@ -67,7 +66,7 @@ const ExpenditureTable = ({ title, data, isPreview }: SubTableProps) => {
 
                 <td className="py-3">
                   <span
-                    className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${kraBadgeColor(item.kra)}`}
+                    className={`text-neutral-content inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${kraBadgeColor(item.kra)}`}
                   >
                     {item.kra}
                   </span>
@@ -144,8 +143,7 @@ export const GeneralExpenditureTable = ({ data }: Props) => {
   return (
     <div className="overflow-x-auto">
       {/* Section label */}
-      <div className="mb-3 flex items-center gap-3 px-1 pt-6">
-        <span className={`bg-accent h-5 w-1 rounded-full`} />
+      <div className="mb-3 flex items-center gap-3 px-5 pt-6">
         <h2 className="text-base-content/60 text-sm font-semibold tracking-widest uppercase">
           General Expenses Table
         </h2>
@@ -154,6 +152,11 @@ export const GeneralExpenditureTable = ({ data }: Props) => {
           {data.length} items
         </span>
       </div>
+      <div>
+        {" "}
+        <div className="divider"></div>
+      </div>
+
       {CATEGORIES.map(({ key, label }) => {
         return (
           <ExpenditureTable
