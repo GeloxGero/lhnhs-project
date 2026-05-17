@@ -7,6 +7,22 @@ interface SubTableProps {
   data: GeneralExpenditureItem[];
   isPreview: boolean;
 }
+const kraColor = (kra: string) => {
+  if (kra.includes("KRA 1")) return "border-l-cyan-400 bg-cyan-400/5";
+  if (kra.includes("KRA 2")) return "border-l-teal-400 bg-teal-400/5";
+  if (kra.includes("KRA 3")) return "border-l-sky-400 bg-sky-400/5";
+  return "border-l-slate-500";
+};
+
+const kraBadgeColor = (kra: string) => {
+  if (kra.includes("KRA 1"))
+    return "bg-cyan-400/10 text-cyan-400 ring-cyan-400/30";
+  if (kra.includes("KRA 2"))
+    return "bg-teal-400/10 text-teal-400 ring-teal-400/30";
+  if (kra.includes("KRA 3"))
+    return "bg-sky-400/10 text-sky-400 ring-sky-400/30";
+  return "bg-slate-400/10 text-slate-400";
+};
 
 const ExpenditureTable = ({ title, data, isPreview }: SubTableProps) => {
   if (data.length === 0) return null;
@@ -18,34 +34,80 @@ const ExpenditureTable = ({ title, data, isPreview }: SubTableProps) => {
         <table className="table-xs table">
           <thead>
             <tr>
-              <th>#</th>
-              <th>KRA</th>
-              <th>SIP Program</th>
-              <th>Activity</th>
-              <th>Purpose</th>
-              <th>Indicator</th>
-              <th>Resources Description</th>
-              <th>Quantity</th>
-              <th>Estimated Cost</th>
-              <th>Account Title</th>
-              <th>Account Code</th>
-              {isPreview && <th>Ar Code</th>}
+              <th className="w-8 py-3 pl-4 font-semibold">#</th>
+              <th className="min-w-35 py-3 font-semibold">KRA</th>
+              <th className="min-w-20 py-3 font-semibold">SIP</th>
+              <th className="min-w-45 py-3 font-semibold">Activity</th>
+              <th className="min-w-55 py-3 font-semibold">Purpose</th>
+              <th className="min-w-35 py-3 font-semibold">Indicator</th>
+              <th className="min-w-30 py-3 font-semibold">Resources</th>
+              <th className="py-3 text-center font-semibold">Qty</th>
+              <th className="min-w-25 py-3 text-right font-semibold">
+                Est. Cost
+              </th>
+              <th className="min-w-40 py-3 font-semibold">Account Title</th>
+              <th className="min-w-27.5 py-3 font-mono font-semibold">
+                Acct Code
+              </th>
+
+              {isPreview && (
+                <th className="py-3 pr-4 text-center font-semibold">Ar Code</th>
+              )}
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
-              <tr key={index}>
-                <th>{index + 1}</th>
-                <td>{item.kra}</td>
-                <td>{item.sipProgram}</td>
-                <td>{item.activity}</td>
-                <td>{item.purpose}</td>
-                <td>{item.indicator}</td>
-                <td>{item.resourcesDescription}</td>
-                <td>{item.resourcesQuantity}</td>
-                <td>{item.estimatedCost}</td>
-                <td>{item.accountTitle}</td>
-                <td>{item.accountCode}</td>
+              <tr
+                key={index}
+                className={`border-l-2 ${kraColor(item.kra)} border-base-content/5 hover:bg-base-content/5 group border-b transition-colors`}
+              >
+                <td className="text-base-content/30 py-3 pl-4 text-xs tabular-nums">
+                  {index + 1}
+                </td>
+
+                <td className="py-3">
+                  <span
+                    className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${kraBadgeColor(item.kra)}`}
+                  >
+                    {item.kra}
+                  </span>
+                </td>
+
+                <td className="text-base-content/30 py-3 text-xs">
+                  {item.sipProgram || "—"}
+                </td>
+
+                <td className="text-base-content/80 py-3 text-xs leading-snug font-medium">
+                  {item.activity}
+                </td>
+
+                <td className="text-base-content/50 max-w-55 py-3 text-xs leading-relaxed">
+                  {item.purpose}
+                </td>
+
+                <td className="text-base-content/60 py-3 text-xs leading-snug">
+                  {item.indicator}
+                </td>
+
+                <td className="text-base-content/60 py-3 text-xs">
+                  {item.resourcesDescription || "—"}
+                </td>
+
+                <td className="text-base-content/70 py-3 text-center text-xs font-semibold">
+                  {item.resourcesQuantity}
+                </td>
+
+                <td className="text-base-content/80 py-3 text-right font-mono text-xs font-semibold">
+                  ₱{item.estimatedCost.toLocaleString()}
+                </td>
+
+                <td className="text-base-content/60 py-3 text-xs leading-snug">
+                  {item.accountTitle}
+                </td>
+
+                <td className="py-3 font-mono text-[11px] text-cyan-500/70">
+                  {item.accountCode}
+                </td>
                 {isPreview && (
                   <td>
                     <span
@@ -81,6 +143,17 @@ export const GeneralExpenditureTable = ({ data }: Props) => {
 
   return (
     <div className="overflow-x-auto">
+      {/* Section label */}
+      <div className="mb-3 flex items-center gap-3 px-1 pt-6">
+        <span className={`bg-accent h-5 w-1 rounded-full`} />
+        <h2 className="text-base-content/60 text-sm font-semibold tracking-widest uppercase">
+          General Expenses Table
+        </h2>
+        <div className="bg-base-content/8 h-px flex-1" />
+        <span className="badge badge-ghost badge-sm text-base-content/40">
+          {data.length} items
+        </span>
+      </div>
       {CATEGORIES.map(({ key, label }) => {
         return (
           <ExpenditureTable

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { onClickHideModal } from "@/lib/helpers";
 import type { GeneralExpenditureItem } from "@/lib/types";
 
 interface Props {
@@ -82,13 +81,9 @@ export const ARCodeModal = ({ item, index }: Props) => {
                 </h3>
               </div>
             </div>
-
-            <button
-              className="btn btn-ghost btn-sm btn-circle"
-              onClick={onClickHideModal(`ar_code_modal_${index}`)}
-            >
-              ✕
-            </button>
+            <form method="dialog">
+              <button className="btn btn-ghost btn-sm btn-circle">✕</button>
+            </form>
           </div>
 
           <p className="text-base-content/50 mt-3 pl-15 text-sm leading-relaxed">
@@ -212,12 +207,11 @@ export const ARCodeModal = ({ item, index }: Props) => {
           <span className="text-base-content/30 text-xs tracking-wider uppercase">
             LHNHS JHS · Annual Procurement Plan 2026
           </span>
-          <button
-            className="btn btn-sm btn-primary btn-outline rounded-lg px-6"
-            onClick={onClickHideModal(`ar_code_modal_${index}`)}
-          >
-            Close
-          </button>
+          <form method="dialog">
+            <button className="btn btn-sm btn-primary btn-outline rounded-lg px-6">
+              Close
+            </button>
+          </form>
         </div>
       </div>
     </dialog>

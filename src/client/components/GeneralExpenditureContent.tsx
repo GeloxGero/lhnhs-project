@@ -25,7 +25,6 @@ export const GeneralExpenditureContent = (): React.ReactNode => {
       throw new Error(`Request failed: ${res.status}`);
     }
     const json = await res.json();
-    console.log(json);
     setData(json.data);
     setLoadingData(false);
   };
@@ -46,7 +45,6 @@ export const GeneralExpenditureContent = (): React.ReactNode => {
   return (
     <div>
       <MonthButtons onClick={handleMonthChoice} activeMonth={monthChoice} />
-      <h3 className="justify-self-center py-4">General Expense Table</h3>
 
       {loadingData ? (
         <div className="flex w-52 flex-col gap-4">
