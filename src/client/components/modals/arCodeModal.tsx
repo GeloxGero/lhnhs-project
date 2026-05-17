@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { GeneralExpenditureItem } from "@/lib/types";
 
 interface Props {
@@ -6,49 +6,51 @@ interface Props {
   index: number;
 }
 
+type ExpenseItem = {
+  id: number;
+  unspc: string | null;
+  description: string | null;
+  specification: string | null;
+  unitOfMeasure: string | null;
+  quantity: number | null;
+  price: string | null; // numeric comes back as string from Postgres
+  total: string | null; // same here
+  arCode: number | null;
+  isActive: boolean;
+  createdAt: string | null;
+  updatedAt: string | null;
+};
+
 export const ARCodeModal = ({ item, index }: Props) => {
-  const data = [
-    {
-      desc: "Thermometer Hygrometer",
-      spec: "",
-      uom: "unit",
-      qty: 60,
-      price: 1000,
-      total: 60000,
-    },
-    {
-      desc: "Barber's Cape/Haircutting Cape",
-      spec: "",
-      uom: "piece",
-      qty: 10,
-      price: 130,
-      total: 1300,
-    },
-    {
-      desc: "Hair Straightener HP321/00",
-      spec: "",
-      uom: "bottle",
-      qty: 4,
-      price: 1800,
-      total: 7200,
-    },
-    {
-      desc: "Hair Dryer 1600W Foldable BHD308/10",
-      spec: "",
-      uom: "unit",
-      qty: 2,
-      price: 2800,
-      total: 5600,
-    },
-    {
-      desc: "Plastic Drawer (Beige)",
-      spec: "",
-      uom: "unit",
-      qty: 2,
-      price: 2600,
-      total: 5200,
-    },
-  ];
+  const [loading, setLoading] = useState<boolean>(false);
+  const [data, setData] = useState<ExpenseItem[]>();
+  const [seeding, setSeeding] = useState<boolean>(false);
+
+  const fetchExpenseItems = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/expense-items?arCode=${item.arCode}`);
+      const json = await res.json();
+      setData(json);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const DEV_SEED_EXPENSE_ITEM = async () => {
+    setSeeding(true);
+    try {
+      await fetch("/api/dev/seed-expense-items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ arCode: item.arCode }),
+      });
+      await fetchExpenseItems(); // refetch after seeding
+    } finally {
+      setSeeding(false);
+    }
+  };
+
   return (
     <dialog
       id={`ar_code_modal_${index}`}
@@ -59,8 +61,17 @@ export const ARCodeModal = ({ item, index }: Props) => {
         <div className="bg-base-300 border-base-content/10 relative border-b px-6 pt-6 pb-5">
           <div className="from-primary via-secondary bg-gradient-to-r-to-transparent absolute inset-x-0 top-0 h-0.5" />
           <div className="mb-4 flex justify-between">
-            <button className="btn btn-xs btn-warning btn-outline gap-1 font-mono">
-              <span>⚡</span> Seed Expense Items
+            <button
+              onClick={DEV_SEED_EXPENSE_ITEM}
+              disabled={seeding}
+              className="btn btn-xs btn-warning btn-outline gap-1 font-mono"
+            >
+              {seeding ? (
+                <span className="loading loading-spinner loading-xs" />
+              ) : (
+                <span>⚡</span>
+              )}
+              Seed Expense Items
             </button>
             <form method="dialog">
               <button className="btn btn-ghost btn-sm btn-circle">✕</button>
@@ -124,23 +135,23 @@ export const ARCodeModal = ({ item, index }: Props) => {
 
           <div className="stat px-4 py-3">
             <div className="stat-title text-[10px] tracking-widest uppercase">
-              Budget
+              Estimated Cost
             </div>
-            <div className="stat-value text-success text-lg">₱30K</div>
-            <div className="stat-desc">₱30,000.00</div>
+            <div className="stat-value text-success text-lg">
+              ₱{item.estimatedCost}
+            </div>
+            <div className="stat-desc">₱{item.estimatedCost}</div>
           </div>
         </div>
 
         {/* ── Account Info ── */}
         <div className="bg-base-300/30 border-base-content/10 flex flex-wrap items-center gap-x-4 gap-y-1 border-b px-6 py-2.5 text-xs">
           <span className="text-base-content/40">Expense Category:</span>
-          <span className="text-base-content font-medium">
-            Electricity Expenses
-          </span>
+          <span className="text-base-content font-medium">{item.category}</span>
           <span className="text-base-content/20">|</span>
           <span className="text-base-content/40">Account Code:</span>
           <span className="text-primary font-mono font-semibold">
-            5020402000
+            {item.accountCode}
           </span>
         </div>
 
@@ -153,46 +164,64 @@ export const ARCodeModal = ({ item, index }: Props) => {
 
           <div className="border-base-content/10 overflow-hidden rounded-xl border">
             <div className="max-h-60 overflow-x-auto overflow-y-auto">
-              <table className="table-xs table-zebra table w-full">
-                <thead className="bg-base-300 text-base-content/50 text-[10px] tracking-wider uppercase">
-                  <tr>
-                    <th className="py-2.5">#</th>
-                    <th className="py-2.5">Item Description</th>
-                    <th className="py-2.5">Specification</th>
-                    <th className="py-2.5 text-center">UoM</th>
-                    <th className="py-2.5 text-center">Qty</th>
-                    <th className="py-2.5 text-right">Price (₱)</th>
-                    <th className="py-2.5 text-right">Total (₱)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((item, i) => (
-                    <tr key={i} className="hover">
-                      <td className="text-base-content/40">{i + 1}</td>
-                      <td className="text-base-content font-medium">
-                        {item.desc}
-                      </td>
-                      <td className="text-base-content/40">
-                        {item.spec || "—"}
-                      </td>
-                      <td className="text-base-content/60 text-center">
-                        {item.uom}
-                      </td>
-                      <td className="text-center font-medium">{item.qty}</td>
-                      <td className="text-right font-mono">
-                        {item.price.toLocaleString("en-PH", {
-                          minimumFractionDigits: 2,
-                        })}
-                      </td>
-                      <td className="text-primary text-right font-mono font-semibold">
-                        {item.total.toLocaleString("en-PH", {
-                          minimumFractionDigits: 2,
-                        })}
-                      </td>
+              {data ? (
+                <table className="table-xs table-zebra table w-full">
+                  <thead className="bg-base-300 text-base-content/50 text-[10px] tracking-wider uppercase">
+                    <tr>
+                      <th className="py-2.5">#</th>
+                      <th className="py-2.5">Item Description</th>
+                      <th className="py-2.5">Specification</th>
+                      <th className="py-2.5 text-center">UoM</th>
+                      <th className="py-2.5 text-center">Qty</th>
+                      <th className="py-2.5 text-right">Price (₱)</th>
+                      <th className="py-2.5 text-right">Total (₱)</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {data!.map((item, i) => (
+                      <tr key={i} className="hover">
+                        <td className="text-base-content/40">{i + 1}</td>
+                        <td className="text-base-content font-medium">
+                          {item.description}
+                        </td>
+                        <td className="text-base-content/40">
+                          {item.specification || "—"}
+                        </td>
+                        <td className="text-base-content/60 text-center">
+                          {item.unitOfMeasure}
+                        </td>
+                        <td className="text-center font-medium">
+                          {item.quantity}
+                        </td>
+                        <td className="text-right font-mono">{item.price}</td>
+                        <td className="text-primary text-right font-mono font-semibold">
+                          {item.total}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="modal-box bg-base-200 max-w-4xl overflow-hidden rounded-2xl p-0">
+                  <div className="text-base-content/30 flex flex-col items-center justify-center gap-3 py-16">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-10 w-10"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                      />
+                    </svg>
+                    <p className="text-sm font-medium">No data found</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Total row */}

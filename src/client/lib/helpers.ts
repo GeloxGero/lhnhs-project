@@ -1,3 +1,4 @@
+// * --------------------- API CALLS --------------------- * //
 export const logout = async () => {
   await fetch("/api/auth/logout", {
     method: "POST",
@@ -7,6 +8,8 @@ export const logout = async () => {
 
   window.location.href = "/auth/login";
 };
+
+// * ----------------------- FUNCTION CALLS --------------------- * //
 
 export const onClickShowModal =
   (modalId: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
