@@ -58,6 +58,14 @@ export const ARCodeModal = ({ item, index }: Props) => {
         {/* ── Header ── */}
         <div className="bg-base-300 border-base-content/10 relative border-b px-6 pt-6 pb-5">
           <div className="from-primary via-secondary bg-gradient-to-r-to-transparent absolute inset-x-0 top-0 h-0.5" />
+          <div className="mb-4 flex justify-between">
+            <button className="btn btn-xs btn-warning btn-outline gap-1 font-mono">
+              <span>⚡</span> Seed Expense Items
+            </button>
+            <form method="dialog">
+              <button className="btn btn-ghost btn-sm btn-circle">✕</button>
+            </form>
+          </div>
 
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -81,9 +89,6 @@ export const ARCodeModal = ({ item, index }: Props) => {
                 </h3>
               </div>
             </div>
-            <form method="dialog">
-              <button className="btn btn-ghost btn-sm btn-circle">✕</button>
-            </form>
           </div>
 
           <p className="text-base-content/50 mt-3 pl-15 text-sm leading-relaxed">
