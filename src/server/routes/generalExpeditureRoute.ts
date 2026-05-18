@@ -16,7 +16,6 @@ app.get("/get_by_year", async (c) => {
   const db = getDb(c.env.HYPERDRIVE.connectionString);
   const year = c.req.query("year");
 
-  console.log(year);
   let expenditures;
   try {
     expenditures = await db.select().from(general_expenditure);

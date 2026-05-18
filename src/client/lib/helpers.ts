@@ -15,3 +15,7 @@ export const onClickShowModal =
   (modalId: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     (document.getElementById(modalId) as HTMLDialogElement)?.showModal();
   };
+
+export const getDialogElement = (modalId: string): HTMLDialogElement => {
+  return document.getElementById(modalId) as HTMLDialogElement;
+};

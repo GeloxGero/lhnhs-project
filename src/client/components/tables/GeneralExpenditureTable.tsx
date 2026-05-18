@@ -1,11 +1,14 @@
 import type { GeneralExpenditureItem } from "@/lib/types";
 import { ARCodeModal } from "../modals/ARCodeModal";
 import { onClickShowModal } from "@/lib/helpers";
+import { useState } from "react";
 
 interface SubTableProps {
   title: string;
   data: GeneralExpenditureItem[];
   isPreview: boolean;
+  arModalOpenIndex: number | undefined;
+  setArModalOpenIndex: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 const kraColor = (kra: string) => {
   if (kra.includes("KRA 1")) return "border-l-cyan-400 bg-cyan-400/5";
@@ -23,11 +26,27 @@ const kraBadgeColor = (kra: string) => {
   return "bg-slate-400/10 text-slate-400";
 };
 
-const ExpenditureTable = ({ title, data, isPreview }: SubTableProps) => {
+const ExpenditureTable = ({
+  title,
+  data,
+  isPreview,
+  arModalOpenIndex,
+  setArModalOpenIndex,
+}: SubTableProps) => {
   if (data.length === 0) return null;
 
   return (
     <div className="mb-6 rounded-3xl px-3">
+      {isPreview &&
+        data.map((item, index) => (
+          <ARCodeModal
+            key={item.arCode}
+            item={item}
+            index={index}
+            isOpen={Number(item.arCode) === arModalOpenIndex}
+            onClose={() => setArModalOpenIndex(undefined)}
+          />
+        ))}
       <h4 className="badge badge-soft badge-info my-5">{title}</h4>
       <div className="overflow-x-auto">
         <table className="table-xs table">
@@ -111,10 +130,13 @@ const ExpenditureTable = ({ title, data, isPreview }: SubTableProps) => {
                   <td>
                     <span
                       className="badge badge-info hover:cursor-pointer"
-                      onClick={onClickShowModal(`ar_code_modal_${index}`)}
+                      onClick={() => {
+                        onClickShowModal(`ar_code_modal_${index}`);
+                        setArModalOpenIndex(Number(item.arCode));
+                        console.log(Number(item.arCode) === arModalOpenIndex);
+                      }}
                     >
                       {item.arCode}
-                      <ARCodeModal item={item} index={index} />
                     </span>
                   </td>
                 )}
@@ -133,6 +155,10 @@ interface Props {
 }
 
 export const GeneralExpenditureTable = ({ data }: Props) => {
+  const [arModalOpenIndex, setArModalOpenIndex] = useState<number | undefined>(
+    -1,
+  );
+
   const CATEGORIES: { key: string; label: string }[] = [
     { key: "regular", label: "Regular Expenditure" },
     { key: "project_related", label: "Project Related Expenditure" },
@@ -164,6 +190,8 @@ export const GeneralExpenditureTable = ({ data }: Props) => {
             title={label}
             data={data.filter((item) => item.category === key)}
             isPreview
+            arModalOpenIndex={arModalOpenIndex}
+            setArModalOpenIndex={setArModalOpenIndex}
           />
         );
       })}

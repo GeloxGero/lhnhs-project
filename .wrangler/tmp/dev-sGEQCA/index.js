@@ -5596,10 +5596,10 @@ var require_lib2 = __commonJS({
   }
 });
 
-// .wrangler/tmp/bundle-Jq9a90/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-Q8npuZ/middleware-loader.entry.ts
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-Jq9a90/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-Q8npuZ/middleware-insertion-facade.js
 init_modules_watch_stub();
 
 // src/server/index.ts
@@ -17469,7 +17469,6 @@ app2.get(
 app2.get("/get_by_year", async (c) => {
   const db = getDb(c.env.HYPERDRIVE.connectionString);
   const year = c.req.query("year");
-  console.log(year);
   let expenditures;
   try {
     expenditures = await db.select().from(general_expenditure);
@@ -17674,6 +17673,19 @@ var app3 = new Hono2();
 app3.get("/", (c) => c.json("expense summary get endpoint"));
 app3.post("/", (c) => c.json("expense summary endpoint"));
 app3.get("/expenditure", (c) => c.json('expense summary "summary" endpoint'));
+app3.get("/ar_get_expenses", async (c) => {
+  const db = getDb(c.env.HYPERDRIVE.connectionString);
+  const arCode = c.req.query("arCode");
+  let expenses;
+  try {
+    expenses = await db.select().from(expense_item).where(eq(expense_item.arCode, Number(arCode)));
+  } catch (e) {
+    return c.json({ message: "Internal server error" }, 500);
+  } finally {
+    console.log(expenses);
+    return c.json({ message: `General Expeditures`, data: expenses }, 200);
+  }
+});
 app3.post("/ar_code_seed", async (c) => {
   const { arCode } = await c.req.json();
   const db = getDb(c.env.HYPERDRIVE.connectionString);
@@ -17686,7 +17698,12 @@ app3.post("/ar_code_seed", async (c) => {
     total: String(mockItem.quantity * Number(mockItem.price)),
     arCode
   };
-  await db.insert(expense_item).values(data);
+  let returnedData;
+  try {
+    returnedData = await db.insert(expense_item).values(data);
+  } catch (e) {
+    return c.json({ message: "Erorr" }, 400);
+  }
   return c.json({ message: `Seeded 1 item for arCode ${arCode}` }, 201);
 });
 var expenseSummaryRoute_default = app3;
@@ -17879,7 +17896,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-Jq9a90/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-Q8npuZ/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -17912,7 +17929,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-Jq9a90/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-Q8npuZ/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

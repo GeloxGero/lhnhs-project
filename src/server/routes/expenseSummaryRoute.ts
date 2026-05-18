@@ -3,12 +3,31 @@ import type { EnvBindings } from "../index";
 import { EXPENSE_SUMMARY_MOCK_DATA } from "../mockData";
 import { expense_item } from "../db/schema/expenseItemSchema";
 import { getDb } from "../db/db";
+import { eq } from "drizzle-orm";
 
 const app = new Hono<{ Bindings: EnvBindings }>();
 
 app.get("/", (c) => c.json("expense summary get endpoint"));
 app.post("/", (c) => c.json("expense summary endpoint"));
 app.get("/expenditure", (c) => c.json('expense summary \"summary\" endpoint'));
+
+app.get("/ar_get_expenses", async (c) => {
+  const db = getDb(c.env.HYPERDRIVE.connectionString);
+  const arCode = c.req.query("arCode");
+
+  let expenses;
+  try {
+    expenses = await db
+      .select()
+      .from(expense_item)
+      .where(eq(expense_item.arCode, Number(arCode)));
+  } catch (e) {
+    return c.json({ message: "Internal server error" }, 500);
+  } finally {
+    console.log(expenses);
+    return c.json({ message: `General Expeditures`, data: expenses }, 200);
+  }
+});
 
 app.post("/ar_code_seed", async (c) => {
   const { arCode } = (await c.req.json()) as { arCode: number };
@@ -29,7 +48,12 @@ app.post("/ar_code_seed", async (c) => {
     arCode,
   };
 
-  await db.insert(expense_item).values(data);
+  let returnedData;
+  try {
+    returnedData = await db.insert(expense_item).values(data);
+  } catch (e) {
+    return c.json({ message: "Erorr" }, 400);
+  }
 
   return c.json({ message: `Seeded 1 item for arCode ${arCode}` }, 201);
 });

@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { GeneralExpenditureItem } from "@/lib/types";
 
 interface Props {
   item: GeneralExpenditureItem;
   index: number;
+  isOpen: boolean;
+  onClose: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
 type ExpenseItem = {
@@ -21,17 +23,32 @@ type ExpenseItem = {
   updatedAt: string | null;
 };
 
-export const ARCodeModal = ({ item, index }: Props) => {
+export const ARCodeModal = ({ item, index, isOpen, onClose }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<ExpenseItem[]>();
   const [seeding, setSeeding] = useState<boolean>(false);
 
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      dialogRef.current?.showModal();
+      fetchExpenseItems();
+    } else {
+      dialogRef.current?.close();
+    }
+
+    fetchExpenseItems();
+  }, [isOpen]);
+
   const fetchExpenseItems = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/expense-items?arCode=${item.arCode}`);
+      const res = await fetch(
+        `/api/protected/expense_summary/ar_get_expenses?arCode=${item.arCode}`,
+      );
       const json = await res.json();
-      setData(json);
+      setData(json.data);
     } finally {
       setLoading(false);
     }
@@ -39,21 +56,88 @@ export const ARCodeModal = ({ item, index }: Props) => {
 
   const DEV_SEED_EXPENSE_ITEM = async () => {
     setSeeding(true);
+    let res;
     try {
-      await fetch("/api/dev/seed-expense-items", {
+      res = await fetch("/api/protected/expense_summary/ar_code_seed", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ arCode: item.arCode }),
       });
-      await fetchExpenseItems(); // refetch after seeding
     } finally {
       setSeeding(false);
+      fetchExpenseItems();
     }
   };
+
+  let tableContent;
+
+  if (!data) {
+    tableContent = (
+      <div className="modal-box bg-base-200 max-w-4xl overflow-hidden rounded-2xl p-0">
+        <div className="text-base-content/30 flex flex-col items-center justify-center gap-3 py-16">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-10 w-10"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+            />
+          </svg>
+          <p className="text-sm font-medium">No data found!!</p>
+        </div>
+      </div>
+    );
+  } else if (loading) {
+    tableContent = <span className="loading loading-ring loading-lg"></span>;
+  } else {
+    tableContent = (
+      <table className="table-xs table-zebra table w-full">
+        <thead className="bg-base-300 text-base-content/50 text-[10px] tracking-wider uppercase">
+          <tr>
+            <th className="py-2.5">#</th>
+            <th className="py-2.5">Item Description</th>
+            <th className="py-2.5">Specification</th>
+            <th className="py-2.5 text-center">UoM</th>
+            <th className="py-2.5 text-center">Qty</th>
+            <th className="py-2.5 text-right">Price (₱)</th>
+            <th className="py-2.5 text-right">Total (₱)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data!.map((item, i) => (
+            <tr key={i} className="hover">
+              <td className="text-base-content/40">{i + 1}</td>
+              <td className="text-base-content font-medium">
+                {item.description}
+              </td>
+              <td className="text-base-content/40">
+                {item.specification || "—"}
+              </td>
+              <td className="text-base-content/60 text-center">
+                {item.unitOfMeasure}
+              </td>
+              <td className="text-center font-medium">{item.quantity}</td>
+              <td className="text-right font-mono">{item.price}</td>
+              <td className="text-primary text-right font-mono font-semibold">
+                {item.total}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
 
   return (
     <dialog
       id={`ar_code_modal_${index}`}
+      ref={dialogRef}
       className="modal --color-neutral-content"
     >
       <div className="modal-box bg-base-200 max-w-4xl overflow-hidden rounded-2xl p-0">
@@ -164,64 +248,7 @@ export const ARCodeModal = ({ item, index }: Props) => {
 
           <div className="border-base-content/10 overflow-hidden rounded-xl border">
             <div className="max-h-60 overflow-x-auto overflow-y-auto">
-              {data ? (
-                <table className="table-xs table-zebra table w-full">
-                  <thead className="bg-base-300 text-base-content/50 text-[10px] tracking-wider uppercase">
-                    <tr>
-                      <th className="py-2.5">#</th>
-                      <th className="py-2.5">Item Description</th>
-                      <th className="py-2.5">Specification</th>
-                      <th className="py-2.5 text-center">UoM</th>
-                      <th className="py-2.5 text-center">Qty</th>
-                      <th className="py-2.5 text-right">Price (₱)</th>
-                      <th className="py-2.5 text-right">Total (₱)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data!.map((item, i) => (
-                      <tr key={i} className="hover">
-                        <td className="text-base-content/40">{i + 1}</td>
-                        <td className="text-base-content font-medium">
-                          {item.description}
-                        </td>
-                        <td className="text-base-content/40">
-                          {item.specification || "—"}
-                        </td>
-                        <td className="text-base-content/60 text-center">
-                          {item.unitOfMeasure}
-                        </td>
-                        <td className="text-center font-medium">
-                          {item.quantity}
-                        </td>
-                        <td className="text-right font-mono">{item.price}</td>
-                        <td className="text-primary text-right font-mono font-semibold">
-                          {item.total}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="modal-box bg-base-200 max-w-4xl overflow-hidden rounded-2xl p-0">
-                  <div className="text-base-content/30 flex flex-col items-center justify-center gap-3 py-16">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-10 w-10"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                      />
-                    </svg>
-                    <p className="text-sm font-medium">No data found</p>
-                  </div>
-                </div>
-              )}
+              {tableContent}
             </div>
 
             {/* Total row */}
