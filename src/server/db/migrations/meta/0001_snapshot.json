@@ -209,9 +209,7 @@
         "general_expenditure_ar_code_unique": {
           "name": "general_expenditure_ar_code_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "ar_code"
-          ]
+          "columns": ["ar_code"]
         }
       },
       "policies": {},
@@ -290,9 +288,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -304,11 +300,7 @@
     "app_schema.role": {
       "name": "role",
       "schema": "app_schema",
-      "values": [
-        "user",
-        "admin",
-        "moderator"
-      ]
+      "values": ["user", "admin", "moderator"]
     }
   },
   "schemas": {

@@ -24,7 +24,6 @@ app.get("/ar_get_expenses", async (c) => {
   } catch (e) {
     return c.json({ message: "Internal server error" }, 500);
   } finally {
-    console.log(expenses);
     return c.json({ message: `General Expeditures`, data: expenses }, 200);
   }
 });

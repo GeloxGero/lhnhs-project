@@ -101,5 +101,4 @@ app.post("logout", (c) => {
   deleteCookie(c, "cookie", { path: "/" });
   return c.json({ message: "User successfully logged out" }, 200);
 });
-
 export default app;
