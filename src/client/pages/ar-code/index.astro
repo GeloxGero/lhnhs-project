@@ -1,0 +1,8 @@
+---
+import { ARCodePage } from "@/components/ArCodePage";
+import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
+---
+
+<AuthenticatedLayout>
+  <ARCodePage client:only="react" />
+</AuthenticatedLayout>

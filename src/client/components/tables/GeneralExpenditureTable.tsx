@@ -128,16 +128,12 @@ const ExpenditureTable = ({
                 </td>
                 {isPreview && (
                   <td>
-                    <span
-                      className="badge badge-info hover:cursor-pointer"
-                      onClick={() => {
-                        onClickShowModal(`ar_code_modal_${index}`);
-                        setArModalOpenIndex(Number(item.arCode));
-                        console.log(Number(item.arCode) === arModalOpenIndex);
-                      }}
+                    <a
+                      href={`/ar-code?code=${item.arCode}`}
+                      className="badge badge-info"
                     >
                       {item.arCode}
-                    </span>
+                    </a>
                   </td>
                 )}
               </tr>
