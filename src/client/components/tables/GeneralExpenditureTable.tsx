@@ -1,5 +1,4 @@
 import type { GeneralExpenditureItem } from "@/lib/types";
-import { ARCodeModal } from "../modals/ARCodeModal";
 import { onClickShowModal } from "@/lib/helpers";
 import { useState } from "react";
 
@@ -34,19 +33,10 @@ const ExpenditureTable = ({
   setArModalOpenIndex,
 }: SubTableProps) => {
   if (data.length === 0) return null;
+  console.log(isPreview);
 
   return (
     <div className="mb-6 rounded-3xl px-3">
-      {isPreview &&
-        data.map((item, index) => (
-          <ARCodeModal
-            key={item.arCode}
-            item={item}
-            index={index}
-            isOpen={Number(item.arCode) === arModalOpenIndex}
-            onClose={() => setArModalOpenIndex(undefined)}
-          />
-        ))}
       <h4 className="badge badge-soft badge-info my-5">{title}</h4>
       <div className="overflow-x-auto">
         <table className="table-xs table">
@@ -68,7 +58,7 @@ const ExpenditureTable = ({
                 Acct Code
               </th>
 
-              {isPreview && (
+              {isPreview ? null : (
                 <th className="py-3 pr-4 text-center font-semibold">Ar Code</th>
               )}
             </tr>
@@ -126,7 +116,7 @@ const ExpenditureTable = ({
                 <td className="py-3 font-mono text-[11px] text-cyan-500/70">
                   {item.accountCode}
                 </td>
-                {isPreview && (
+                {isPreview ? null : (
                   <td>
                     <a
                       href={`/ar-code?code=${item.arCode}`}
@@ -135,7 +125,7 @@ const ExpenditureTable = ({
                       {item.arCode}
                     </a>
                   </td>
-                )}
+                ) }
               </tr>
             ))}
           </tbody>
@@ -150,7 +140,7 @@ interface Props {
   isPreview: boolean;
 }
 
-export const GeneralExpenditureTable = ({ data }: Props) => {
+export const GeneralExpenditureTable = ({ data, isPreview }: Props) => {
   const [arModalOpenIndex, setArModalOpenIndex] = useState<number | undefined>(
     -1,
   );
@@ -185,7 +175,7 @@ export const GeneralExpenditureTable = ({ data }: Props) => {
             key={key}
             title={label}
             data={data.filter((item) => item.category === key)}
-            isPreview
+            isPreview={isPreview}
             arModalOpenIndex={arModalOpenIndex}
             setArModalOpenIndex={setArModalOpenIndex}
           />

@@ -6,7 +6,7 @@ export default defineConfig({
   dialect: "postgresql",
 
   dbCredentials: {
-    url: "postgresql://postgres:vZuAmeigjHTVRgfXGWuua9a9gF3Eijz3idMqjmSkETGxzHC69d@localhost:5432/lhnhs-local",
+    url: "postgresql://postgres:vZuAmeigjHTVRgfXGWuua9a9gF3Eijz3idMqjmSkETGxzHC69d@localhost:5432/i3p",
   },
   migrations: {
     schema: "public",
