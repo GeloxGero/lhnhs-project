@@ -1,4 +1,4 @@
-import { sign } from "hono/jwt";
+import { sign, verify } from "hono/jwt";
 
 export const generateToken = async (userId: number, secret: string) => {
   const now = Math.floor(Date.now() / 1000);
@@ -12,6 +12,10 @@ export const generateToken = async (userId: number, secret: string) => {
   const token = await sign(payload, secret!);
   return token;
 };
+
+export const verifyToken = async (token: string, secret: string) => {
+  return await verify(token, secret, 'HS256');
+}
 
 export const hashPassword = async (password: string) => {
   const encoder = new TextEncoder();

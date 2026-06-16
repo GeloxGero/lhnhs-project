@@ -3,9 +3,9 @@ import { getDb } from "../db/db.ts";
 import { users } from "../db/schema/usersSchema.ts";
 
 import type { EnvBindings } from "../index.ts";
-import { generateToken, hashPassword, verifyPassword } from "../helpers.ts";
-import { deleteCookie, setCookie } from "hono/cookie";
-import { verify } from "hono/jwt";
+import { generateToken, verifyToken, hashPassword, verifyPassword } from "../helpers.ts";
+import { deleteCookie, setCookie, getCookie } from "hono/cookie";
+
 
 const app = new Hono<{ Bindings: EnvBindings }>();
 
@@ -101,4 +101,5 @@ app.post("logout", (c) => {
   deleteCookie(c, "cookie", { path: "/" });
   return c.json({ message: "User successfully logged out" }, 200);
 });
+
 export default app;

@@ -20,6 +20,11 @@ export const GeneralExpenditureContent = (): React.ReactNode => {
       },
     );
 
+    if(res.status === 401){
+      setLoadingData(false);
+      throw new Error("Unauthorized");
+    }
+
     if (!res.ok) {
       setLoadingData(false);
       throw new Error(`Request failed: ${res.status}`);
@@ -30,7 +35,21 @@ export const GeneralExpenditureContent = (): React.ReactNode => {
   };
 
   useEffect(() => {
-    fetchDataOfYear();
+    const handleFetch = async () => {     
+      try{
+       await fetchDataOfYear();
+    }
+    catch(error: any){
+      if(error.message === "Unauthorized"){
+        window.location.replace("/auth/login");
+      } else {
+        console.error("Error fetching data:", error);
+      }
+    }}
+
+
+    handleFetch();
+
   }, [year]);
   const handleMonthChoice = (month: string) => {
     setMonthChoice(month);
