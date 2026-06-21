@@ -3,9 +3,13 @@ import { getDb } from "../db/db.ts";
 import { users } from "../db/schema/usersSchema.ts";
 
 import type { EnvBindings } from "../index.ts";
-import { generateToken, verifyToken, hashPassword, verifyPassword } from "../helpers.ts";
+import {
+  generateToken,
+  verifyToken,
+  hashPassword,
+  verifyPassword,
+} from "../helpers.ts";
 import { deleteCookie, setCookie, getCookie } from "hono/cookie";
-
 
 const app = new Hono<{ Bindings: EnvBindings }>();
 
@@ -47,7 +51,7 @@ app.post("/login", async (c) => {
     console.log("Logged in successfully");
     return c.json({ message: "Successful login", user: user.email }, 200);
   } catch (e) {
-    return c.json({ error: "Internal server error \\ database error" }, 500);
+    return c.json({ error: "Internal server error  database error" }, 500);
   }
 });
 

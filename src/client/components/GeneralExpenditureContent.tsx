@@ -3,6 +3,7 @@ import { MonthButtons } from "./buttons/GeneralExpenditureButtons";
 import { GeneralExpenditureTable } from "./tables/GeneralExpenditureTable";
 import { useState, useEffect } from "react";
 
+type GeneralExpenditureItemsWithTotal = GeneralExpenditureItem & { totalEstimatedCost: number };
 export const GeneralExpenditureContent = (): React.ReactNode => {
   const [data, setData] = useState<GeneralExpenditureItem[]>();
   const [monthChoice, setMonthChoice] = useState<string>("January");
@@ -20,7 +21,7 @@ export const GeneralExpenditureContent = (): React.ReactNode => {
       },
     );
 
-    if(res.status === 401){
+    if (res.status === 401) {
       setLoadingData(false);
       throw new Error("Unauthorized");
     }
@@ -35,21 +36,19 @@ export const GeneralExpenditureContent = (): React.ReactNode => {
   };
 
   useEffect(() => {
-    const handleFetch = async () => {     
-      try{
-       await fetchDataOfYear();
-    }
-    catch(error: any){
-      if(error.message === "Unauthorized"){
-        window.location.replace("/auth/login");
-      } else {
-        console.error("Error fetching data:", error);
+    const handleFetch = async () => {
+      try {
+        await fetchDataOfYear();
+      } catch (error: any) {
+        if (error.message === "Unauthorized") {
+          window.location.replace("/auth/login");
+        } else {
+          console.error("Error fetching data:", error);
+        }
       }
-    }}
-
+    };
 
     handleFetch();
-
   }, [year]);
   const handleMonthChoice = (month: string) => {
     setMonthChoice(month);

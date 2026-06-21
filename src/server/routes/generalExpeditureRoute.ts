@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import type { EnvBindings } from "../index.ts";
 import { getDb } from "../db/db.ts";
 import { general_expenditure } from "../db/schema/generalExpenditureSchema.ts";
-import { eq } from "drizzle-orm";
+import { eq, sum, getTableColumns } from "drizzle-orm";
 
 const app = new Hono<{ Bindings: EnvBindings }>();
 
@@ -14,11 +14,15 @@ app.get("/expenditure", (c) =>
 
 app.get("/get_by_year", async (c) => {
   const db = getDb(c.env.HYPERDRIVE.connectionString);
-  const year = c.req.query("year");
+  let yearParam: string | undefined = "2024";
+  yearParam = c.req.query("year");
+
+  const year = parseInt(yearParam || "2024");
+
 
   let expenditures;
   try {
-    expenditures = await db.select().from(general_expenditure);
+    expenditures = await db.select({...getTableColumns(general_expenditure), totalEstimatedCost: sum(general_expenditure.estimatedCost) }).from(general_expenditure).where(eq(general_expenditure.year, year)).groupBy(general_expenditure.id);
   } catch (e) {
     return c.json({ message: "Internal server error" }, 500);
   } finally {

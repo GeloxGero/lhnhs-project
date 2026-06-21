@@ -3,7 +3,7 @@ import type { EnvBindings } from "../index";
 import { EXPENSE_SUMMARY_MOCK_DATA } from "../mockData";
 import { expense_item } from "../db/schema/expenseItemSchema";
 import { getDb } from "../db/db";
-import { eq } from "drizzle-orm";
+import { eq, sum, getTableColumns } from "drizzle-orm";
 
 const app = new Hono<{ Bindings: EnvBindings }>();
 
@@ -18,13 +18,14 @@ app.get("/ar_get_expenses", async (c) => {
   let expenses;
   try {
     expenses = await db
-      .select()
+      .select({...getTableColumns(expense_item), expenseTotal: sum(expense_item.total) })
       .from(expense_item)
-      .where(eq(expense_item.arCode, Number(arCode)));
+      .where(eq(expense_item.arCode, Number(arCode)))
+      .groupBy(expense_item.id);
   } catch (e) {
     return c.json({ message: "Internal server error" }, 500);
   } finally {
-    return c.json({ message: `General Expeditures`, data: expenses }, 200);
+    return c.json({ message: `General Expenditures`, data: expenses }, 200);
   }
 });
 

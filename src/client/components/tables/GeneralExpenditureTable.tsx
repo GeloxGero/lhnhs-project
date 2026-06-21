@@ -125,7 +125,7 @@ const ExpenditureTable = ({
                       {item.arCode}
                     </a>
                   </td>
-                ) }
+                )}
               </tr>
             ))}
           </tbody>

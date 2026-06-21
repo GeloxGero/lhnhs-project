@@ -5596,10 +5596,10 @@ var require_lib2 = __commonJS({
   }
 });
 
-// .wrangler/tmp/bundle-TFFUJ3/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-4nrsqw/middleware-loader.entry.ts
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-TFFUJ3/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-4nrsqw/middleware-insertion-facade.js
 init_modules_watch_stub();
 
 // src/server/index.ts
@@ -13415,6 +13415,13 @@ function mapRelationalRow(tablesConfig, tableConfig, row, buildQueryResultSelect
 }
 __name(mapRelationalRow, "mapRelationalRow");
 
+// node_modules/drizzle-orm/sql/functions/aggregate.js
+init_modules_watch_stub();
+function sum(expression) {
+  return sql`sum(${expression})`.mapWith(String);
+}
+__name(sum, "sum");
+
 // node_modules/drizzle-orm/pg-core/view-base.js
 init_modules_watch_stub();
 var PgViewBase = class extends View {
@@ -17468,10 +17475,12 @@ app2.get(
 );
 app2.get("/get_by_year", async (c) => {
   const db = getDb(c.env.HYPERDRIVE.connectionString);
-  const year = c.req.query("year");
+  let yearParam = "2024";
+  yearParam = c.req.query("year");
+  const year = parseInt(yearParam || "2024");
   let expenditures;
   try {
-    expenditures = await db.select().from(general_expenditure);
+    expenditures = await db.select({ ...getTableColumns(general_expenditure), totalEstimatedCost: sum(general_expenditure.estimatedCost) }).from(general_expenditure).where(eq(general_expenditure.year, year)).groupBy(general_expenditure.id);
   } catch (e) {
     return c.json({ message: "Internal server error" }, 500);
   } finally {
@@ -17678,11 +17687,11 @@ app3.get("/ar_get_expenses", async (c) => {
   const arCode = c.req.query("arCode");
   let expenses;
   try {
-    expenses = await db.select().from(expense_item).where(eq(expense_item.arCode, Number(arCode)));
+    expenses = await db.select({ ...getTableColumns(expense_item), expenseTotal: sum(expense_item.total) }).from(expense_item).where(eq(expense_item.arCode, Number(arCode))).groupBy(expense_item.id);
   } catch (e) {
     return c.json({ message: "Internal server error" }, 500);
   } finally {
-    return c.json({ message: `General Expeditures`, data: expenses }, 200);
+    return c.json({ message: `General Expenditures`, data: expenses }, 200);
   }
 });
 app3.post("/ar_code_seed", async (c) => {
@@ -17798,7 +17807,7 @@ app4.post("/login", async (c) => {
     console.log("Logged in successfully");
     return c.json({ message: "Successful login", user: user.email }, 200);
   } catch (e) {
-    return c.json({ error: "Internal server error \\ database error" }, 500);
+    return c.json({ error: "Internal server error  database error" }, 500);
   }
 });
 app4.post("/signup", async (c) => {
@@ -17895,7 +17904,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-TFFUJ3/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-4nrsqw/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -17928,7 +17937,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-TFFUJ3/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-4nrsqw/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

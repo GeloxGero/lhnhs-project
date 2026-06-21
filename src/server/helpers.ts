@@ -14,8 +14,8 @@ export const generateToken = async (userId: number, secret: string) => {
 };
 
 export const verifyToken = async (token: string, secret: string) => {
-  return await verify(token, secret, 'HS256');
-}
+  return await verify(token, secret, "HS256");
+};
 
 export const hashPassword = async (password: string) => {
   const encoder = new TextEncoder();

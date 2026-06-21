@@ -12,9 +12,12 @@ type ExpenseItem = {
   total: string | null;
   arCode: number | null;
   isActive: boolean;
+  expenseTotal: number | null;
   createdAt: string | null;
   updatedAt: string | null;
 };
+
+
 
 // ARCodePage.tsx — reads the param on the client
 export const ARCodePage = () => {
@@ -38,6 +41,7 @@ export const ARCodePage = () => {
       );
       const json = await res.json();
       setData(json.data);
+      console.log(json.data);
     } catch {
       return <div>Error!</div>;
     }
@@ -81,6 +85,8 @@ export const ARCodePage = () => {
   } else if (loading) {
     tableContent = <span className="loading loading-ring loading-lg"></span>;
   } else {
+
+
     tableContent = (
       <table className="table-xs table-zebra table w-full">
         <thead className="bg-base-300 text-base-content/50 text-[10px] tracking-wider uppercase">
@@ -120,6 +126,8 @@ export const ARCodePage = () => {
   }
 
   if (!arCode) return <div>No AR code provided</div>;
+
+  const totalProcurement = data ? data.reduce((sum, item) => sum + Number(item.expenseTotal || 0), 0) : 0;
 
   return (
     <div className="bg-base-200 min-h-screen">
@@ -203,11 +211,12 @@ export const ARCodePage = () => {
           <div className="stat px-4 py-3">
             <div className="stat-title text-[10px] tracking-widest uppercase">
               Estimated Cost
+              
             </div>
             <div className="stat-value text-success text-lg">
-              ₱{item?.estimatedCost}
+              ₱{totalProcurement.toFixed(2)}
             </div>
-            <div className="stat-desc">₱{item?.estimatedCost}</div>
+            <div className="stat-desc">₱{totalProcurement.toFixed(2)}</div>
           </div>
         </div>
 
@@ -242,7 +251,7 @@ export const ARCodePage = () => {
                 Total Procurement Amount
               </span>
               <span className="text-primary font-mono text-sm font-bold">
-                ₱79,300.00
+                ₱{totalProcurement.toFixed(2)}
               </span>
             </div>
           </div>
