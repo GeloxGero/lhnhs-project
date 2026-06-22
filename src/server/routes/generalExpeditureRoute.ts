@@ -12,6 +12,18 @@ app.get("/expenditure", (c) =>
   c.json('general expenditure "expenditure" endpoint'),
 );
 
+app.get("ar_get_general_expenditure", async (c) => {
+  const db = getDb(c.env.HYPERDRIVE.connectionString);
+  const arCode = c.req.query("arCode");
+
+  try{
+    const expenditure = await db.select().from(general_expenditure).where(eq(general_expenditure.arCode, Number(arCode)));
+    return c.json({ message: `General Expenditure for arCode ${arCode}`, data: expenditure }, 200);
+  } catch (e) {
+    return c.json({ message: "Internal server error" }, 500);
+  }
+})
+
 app.get("/get_by_year", async (c) => {
   const db = getDb(c.env.HYPERDRIVE.connectionString);
   let yearParam: string | undefined = "2024";
@@ -22,7 +34,7 @@ app.get("/get_by_year", async (c) => {
 
   let expenditures;
   try {
-    expenditures = await db.select({...getTableColumns(general_expenditure), totalEstimatedCost: sum(general_expenditure.estimatedCost) }).from(general_expenditure).where(eq(general_expenditure.year, year)).groupBy(general_expenditure.id);
+    expenditures = await db.select().from(general_expenditure).where(eq(general_expenditure.year, year));
   } catch (e) {
     return c.json({ message: "Internal server error" }, 500);
   } finally {

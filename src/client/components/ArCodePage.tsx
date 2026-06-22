@@ -32,6 +32,7 @@ export const ARCodePage = () => {
 
   useEffect(() => {
     fetchExpenseItems();
+    fetchGeneralExpenditureItem();
   }, [arCode]);
 
   const fetchExpenseItems = async () => {
@@ -46,6 +47,18 @@ export const ARCodePage = () => {
       return <div>Error!</div>;
     }
   };
+
+  const fetchGeneralExpenditureItem = async () => {
+    try {
+      const res = await fetch(
+        `/api/protected/general_expenditure/ar_get_general_expenditure?arCode=${arCode}`,
+      );
+      const json = await res.json();
+      setItem(json.data[0]);
+    } catch {
+      return <div>Error!</div>;
+    }
+  }
 
   const DEV_SEED_EXPENSE_ITEM = async () => {
     let res;
@@ -128,6 +141,7 @@ export const ARCodePage = () => {
   if (!arCode) return <div>No AR code provided</div>;
 
   const totalProcurement = data ? data.reduce((sum, item) => sum + Number(item.expenseTotal || 0), 0) : 0;
+  console.log(item);
 
   return (
     <div className="bg-base-200 min-h-screen">
@@ -164,21 +178,21 @@ export const ARCodePage = () => {
               <div>
                 <div className="mb-1 flex flex-wrap items-center gap-2">
                   <div className="badge badge-primary badge-outline badge-sm font-semibold tracking-wide">
-                    {item?.kra}
+                    {item ? item.kra : "Loading..."}
                   </div>
                   <div className="badge badge-secondary badge-outline badge-sm">
                     {arCode}
                   </div>
                 </div>
                 <h3 className="text-base-content text-base leading-tight font-semibold">
-                  {item?.accountTitle}
+                  {item ? item.accountTitle : "Loading..."}
                 </h3>
               </div>
             </div>
           </div>
 
           <p className="text-base-content/50 mt-3 pl-15 text-sm leading-relaxed">
-            {item?.purpose}
+            {item ? item.purpose : "Loading..."}
           </p>
         </div>
 
@@ -188,23 +202,23 @@ export const ARCodePage = () => {
             <div className="stat-title text-[10px] tracking-widest uppercase">
               Performance Indicator
             </div>
-            <div className="stat-value text-primary text-lg"># of Bills</div>
-            <div className="stat-desc">monthly electricity bills</div>
+            <div className="stat-value text-primary text-lg">{item ? item.indicator : "Loading..."}</div>
+            <div className="stat-desc">{item ? item.category : "Loading..."}</div>
           </div>
 
           <div className="stat px-4 py-3">
             <div className="stat-title text-[10px] tracking-widest uppercase">
               Resource Type
             </div>
-            <div className="stat-value text-secondary text-lg">Electrical</div>
-            <div className="stat-desc">electrical supply</div>
+            <div className="stat-value text-secondary text-lg">{item ? item.resourcesDescription : "Loading..."}</div>
+            <div className="stat-desc"></div>
           </div>
 
           <div className="stat px-4 py-3">
             <div className="stat-title text-[10px] tracking-widest uppercase">
               Quantity
             </div>
-            <div className="stat-value text-accent text-lg">1</div>
+            <div className="stat-value text-accent text-lg">{item ? item.resourcesQuantity : "Loading..."}</div>
             <div className="stat-desc">unit/s</div>
           </div>
 
@@ -224,12 +238,12 @@ export const ARCodePage = () => {
         <div className="bg-base-300/30 border-base-content/10 flex flex-wrap items-center gap-x-4 gap-y-1 border-b px-6 py-2.5 text-xs">
           <span className="text-base-content/40">Expense Category:</span>
           <span className="text-base-content font-medium">
-            {item?.category}
+            {item ? item.category : "Loading..."}
           </span>
           <span className="text-base-content/20">|</span>
           <span className="text-base-content/40">Account Code:</span>
           <span className="text-primary font-mono font-semibold">
-            {item?.accountCode}
+            {item ? item.accountCode : "Loading..."}
           </span>
         </div>
 
