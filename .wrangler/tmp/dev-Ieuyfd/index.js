@@ -5596,10 +5596,10 @@ var require_lib2 = __commonJS({
   }
 });
 
-// .wrangler/tmp/bundle-8D0sTn/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-NnsN1T/middleware-loader.entry.ts
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-8D0sTn/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-NnsN1T/middleware-insertion-facade.js
 init_modules_watch_stub();
 
 // src/server/index.ts
@@ -17478,7 +17478,13 @@ app2.get("ar_get_general_expenditure", async (c) => {
   const arCode = c.req.query("arCode");
   try {
     const expenditure = await db.select().from(general_expenditure).where(eq(general_expenditure.arCode, Number(arCode)));
-    return c.json({ message: `General Expenditure for arCode ${arCode}`, data: expenditure }, 200);
+    return c.json(
+      {
+        message: `General Expenditure for arCode ${arCode}`,
+        data: expenditure
+      },
+      200
+    );
   } catch (e) {
     return c.json({ message: "Internal server error" }, 500);
   }
@@ -17697,7 +17703,10 @@ app3.get("/ar_get_expenses", async (c) => {
   const arCode = c.req.query("arCode");
   let expenses;
   try {
-    expenses = await db.select({ ...getTableColumns(expense_item), expenseTotal: sum(expense_item.total) }).from(expense_item).where(eq(expense_item.arCode, Number(arCode))).groupBy(expense_item.id);
+    expenses = await db.select({
+      ...getTableColumns(expense_item),
+      expenseTotal: sum(expense_item.total)
+    }).from(expense_item).where(eq(expense_item.arCode, Number(arCode))).groupBy(expense_item.id);
   } catch (e) {
     return c.json({ message: "Internal server error" }, 500);
   } finally {
@@ -17914,7 +17923,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-8D0sTn/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-NnsN1T/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -17947,7 +17956,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-8D0sTn/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-NnsN1T/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

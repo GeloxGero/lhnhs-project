@@ -3,7 +3,9 @@ import { MonthButtons } from "./buttons/GeneralExpenditureButtons";
 import { GeneralExpenditureTable } from "./tables/GeneralExpenditureTable";
 import { useState, useEffect } from "react";
 
-type GeneralExpenditureItemsWithTotal = GeneralExpenditureItem & { totalEstimatedCost: number };
+type GeneralExpenditureItemsWithTotal = GeneralExpenditureItem & {
+  totalEstimatedCost: number;
+};
 export const GeneralExpenditureContent = (): React.ReactNode => {
   const [data, setData] = useState<GeneralExpenditureItem[]>();
   const [monthChoice, setMonthChoice] = useState<string>("January");

@@ -18,7 +18,10 @@ app.get("/ar_get_expenses", async (c) => {
   let expenses;
   try {
     expenses = await db
-      .select({...getTableColumns(expense_item), expenseTotal: sum(expense_item.total) })
+      .select({
+        ...getTableColumns(expense_item),
+        expenseTotal: sum(expense_item.total),
+      })
       .from(expense_item)
       .where(eq(expense_item.arCode, Number(arCode)))
       .groupBy(expense_item.id);
