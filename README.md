@@ -1,6 +1,6 @@
 # LHNHS JHS — Annual Procurement Plan System
 
-A web-based procurement planning and expense management system for **Luis Hervias National High School Junior High School**, covering the Annual Procurement Plan (APP) for 2026.
+A web-based procurement planning and expense management system for **La Huerta National High School Junior High School**, covering the Annual Procurement Plan (APP) for 2026.
 
 ---
 
@@ -14,7 +14,7 @@ This system allows school administrators and staff to manage and track procureme
 
 - **AR Code Viewer** — View detailed information per AR code including KRA, account title, purpose, performance indicator, resource type, quantity, and estimated cost
 - **Annual Procurement Plan Table** — Itemized list of procurement items with description, specification, unit of measure, quantity, price, and total
-- **Receipt / Image Attachment** — View and verify attached receipt images per procurement line item
+- **Receipt / Image Viewer** — View and verify attached receipt images per procurement line item via a modal
 - **Expense Seeding** — Dev utility to seed expense items for testing
 - **Total Procurement Summary** — Auto-calculated total procurement amount per AR code
 
@@ -22,29 +22,18 @@ This system allows school administrators and staff to manage and track procureme
 
 ## Tech Stack
 
-- **Framework:** React (with TypeScript)
-- **Styling:** Tailwind CSS + DaisyUI
-- **Routing / API:** Next.js API routes
-- **Database:** Drizzle ORM (inferred from project structure)
-
----
-
-## Project Structure
-
-```
-/
-├── app/
-├── components/
-│   └── ImageViewerModal.tsx       # Modal for viewing and verifying receipt images
-├── pages/
-│   └── ARCodePage.tsx             # Main AR code detail page
-├── api/
-│   └── protected/
-│       ├── expense_summary/       # Expense item endpoints
-│       └── general_expenditure/   # General expenditure endpoints
-└── lib/
-    └── types.ts                   # Shared TypeScript types
-```
+| Layer      | Technology                                                                |
+| ---------- | ------------------------------------------------------------------------- |
+| Runtime    | [Bun](https://bun.sh/) ≥ 1.x, Node ≥ 22.12                                |
+| Framework  | [Astro](https://astro.build/) 6 + React 19 islands                        |
+| Styling    | Tailwind CSS v4 + DaisyUI v5 + shadcn/ui                                  |
+| Backend    | [Hono](https://hono.dev/) on Cloudflare Workers                           |
+| Database   | PostgreSQL via [Drizzle ORM](https://orm.drizzle.team/)                   |
+| DB Hosting | [Neon](https://neon.tech/) (staging) · Local PostgreSQL / DBeaver (local) |
+| Storage    | Cloudinary (image uploads)                                                |
+| Deploy     | [Cloudflare Workers](https://workers.cloudflare.com/) via Wrangler        |
+| Charts     | Chart.js + react-chartjs-2                                                |
+| Export     | xlsx                                                                      |
 
 ---
 
@@ -52,45 +41,97 @@ This system allows school administrators and staff to manage and track procureme
 
 ### Prerequisites
 
-- Node.js 18+
-- Package manager: `npm`, `yarn`, or `pnpm`
+- [Bun](https://bun.sh/) ≥ 1.x
+- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/) (installed via dependencies)
+- A Cloudflare account
+- A [Neon](https://neon.tech/) account for staging
+- Local PostgreSQL instance (e.g. via [DBeaver](https://dbeaver.io/))
 
 ### Installation
 
 ```bash
 git clone https://github.com/GeloxGero/lhnhs-project.git
 cd lhnhs-project
-npm install
+bun install
 ```
 
 ### Development
 
+Runs the Astro client and Cloudflare Worker concurrently:
+
 ```bash
-npm run dev
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+- Client → [http://localhost:4321](http://localhost:4321)
+- Worker → [http://localhost:8787](http://localhost:8787)
 
-### Build
+---
+
+## Database
+
+### Generate migrations
 
 ```bash
-npm run build
-npm start
+bun run db:generate
+```
+
+### Apply migrations locally
+
+Targets your local PostgreSQL instance configured in `drizzle.local.config.ts`:
+
+```bash
+bun run db:migrate:local
+```
+
+### Apply migrations to staging
+
+Targets the remote Neon PostgreSQL database:
+
+```bash
+bun run db:migrate:staging
 ```
 
 ---
 
-## Usage
+## Deployment
 
-Navigate to an AR code page via:
+### Staging
+
+```bash
+bun run deploy:staging
+```
+
+### Production
+
+```bash
+bun run deploy:prod
+```
+
+### Dry runs (build only, no upload)
+
+```bash
+bun run dryrun:staging
+bun run dryrun:prod
+```
+
+---
+
+## Project Structure
 
 ```
-/?code=<AR_CODE>
+/
+├── src/
+│   ├── components/
+│   │   └── ImageViewerModal.tsx     # Modal for viewing and verifying receipt images
+│   ├── pages/
+│   │   └── ARCodePage.tsx           # Main AR code detail page
+│   └── lib/
+│       └── types.ts                 # Shared TypeScript types
+├── drizzle.local.config.ts          # Drizzle config for local PostgreSQL
+├── wrangler.toml                    # Cloudflare Workers config
+└── package.json
 ```
-
-For example: `/?code=195`
-
-This loads the procurement details for that specific AR code, including all line items and their associated receipt attachments.
 
 ---
 
@@ -104,9 +145,15 @@ This loads the procurement details for that specific AR code, including all line
 
 ---
 
-## Contributing
+## Usage
 
-This is an internal school system. For changes, open a pull request with a clear description of what was modified and why.
+Navigate to an AR code detail page via:
+
+```
+/?code=<AR_CODE>
+```
+
+For example: `/?code=195`
 
 ---
 
