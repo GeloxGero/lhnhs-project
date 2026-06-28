@@ -3,8 +3,15 @@
   "main": "src/server/index.ts",
   "compatibility_date": "2026-05-06",
   "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
   "secrets": {
     "required": ["JWT_SECRET"]
+  },
+  "observability": {
+    "enabled": false
   },
   "vars": {
     "ENVIRONMENT": "development"
@@ -26,6 +33,12 @@
         "ENVIRONMENT": "staging",
         "POLICY_AUD": "7ce4c6aa814de63172705a54f589a6d4f968fbd550c18630e2cd1c48ac2cae8a",
         "CLOUDFLARE_ACCESS_DOMAIN": "https://gelo12gero.cloudflareaccess.com"
+      },
+      "observability": {
+        "logs": {
+          "enabled": false,
+          "invocation_logs": true
+        }
       },
       "hyperdrive": [
         {
