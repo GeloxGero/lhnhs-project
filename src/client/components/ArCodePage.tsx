@@ -43,7 +43,7 @@ export const ARCodePage = () => {
       const res = await fetch(
         `/api/protected/expense_summary/ar_get_expenses?arCode=${arCode}`,
       );
-      const json = await res.json();
+      const json: any = await res.json();
       setData(json.data);
       console.log(json.data);
     } catch {
@@ -56,7 +56,7 @@ export const ARCodePage = () => {
       const res = await fetch(
         `/api/protected/general_expenditure/ar_get_general_expenditure?arCode=${arCode}`,
       );
-      const json = await res.json();
+      const json: any = await res.json();
       setItem(json.data[0]);
     } catch {
       return <div>Error!</div>;

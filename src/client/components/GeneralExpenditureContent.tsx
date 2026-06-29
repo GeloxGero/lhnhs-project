@@ -32,7 +32,7 @@ export const GeneralExpenditureContent = (): React.ReactNode => {
       setLoadingData(false);
       throw new Error(`Request failed: ${res.status}`);
     }
-    const json = await res.json();
+    const json: any = await res.json();
     setData(json.data);
     setLoadingData(false);
   };

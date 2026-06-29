@@ -15,7 +15,4 @@ export interface GeneralExpenditureItem {
 }
 
 export type GeneralExpenditureCategory =
-  | "regular"
-  | "project_related"
-  | "repair_and_maintenance"
-  | "others";
+  "regular" | "project_related" | "repair_and_maintenance" | "others";
