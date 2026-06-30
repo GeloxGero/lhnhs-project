@@ -21,7 +21,7 @@
     "deploy:prod": "bun run build:client && wrangler deploy --env production",
     "db:generate": "drizzle-kit generate --config=drizzle.local.config.ts",
     "db:migrate:local": "drizzle-kit migrate --config=drizzle.local.config.ts",
-    "db:migrate:staging": "wrangler d1 migrations apply lhnhs-project-staging-database --remote --env staging",
+    "db:migrate:staging": "drizzle-kit migrate --config=drizzle.staging.config.ts",
     "generate-types": "wrangler types"
   },
   "dependencies": {
