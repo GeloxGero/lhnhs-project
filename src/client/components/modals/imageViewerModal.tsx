@@ -1,6 +1,7 @@
 import { getCloudinaryImage } from "../../lib/helpers";
 import { AdvancedImage } from "@cloudinary/react";
 import { UploadImage } from "../DevUploadForm";
+import { type ExpenseItem } from "../../lib/types";
 
 const NoImage = () => {
   return (
@@ -43,13 +44,13 @@ const NoImage = () => {
 type ImageViewerModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  itemDescription: string | null;
+  item: ExpenseItem | null;
 };
 
 export const ImageViewerModal = ({
   isOpen,
   onClose,
-  itemDescription,
+  item,
 }: ImageViewerModalProps) => {
   if (!isOpen) return null;
 
@@ -77,9 +78,9 @@ export const ImageViewerModal = ({
                 <p className="text-base-content text-sm font-semibold">
                   Receipt / Attachment
                 </p>
-                {itemDescription && (
+                {item?.description && (
                   <p className="text-base-content/40 mt-0.5 max-w-[260px] truncate text-xs">
-                    {itemDescription}
+                    {item.description}
                   </p>
                 )}
               </div>

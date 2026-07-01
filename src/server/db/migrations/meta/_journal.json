@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1778749116307,
-      "tag": "0000_quick_black_queen",
-      "breakpoints": false
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1779032717616,
-      "tag": "0001_slippery_susan_delgado",
-      "breakpoints": false
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1782946502816,
-      "tag": "0002_curious_the_anarchist",
+      "when": 1782947413696,
+      "tag": "0000_good_warlock",
       "breakpoints": false
     }
   ]

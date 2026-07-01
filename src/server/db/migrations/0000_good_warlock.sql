@@ -1,6 +1,23 @@
 CREATE SCHEMA "app_schema";
 
 CREATE TYPE "app_schema"."role" AS ENUM('user', 'admin', 'moderator');
+CREATE TABLE "app_schema"."expense_item" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"unspc" text,
+	"description" text,
+	"specification" text,
+	"unit_of_measure" text,
+	"quantity" integer,
+	"price" numeric,
+	"total" numeric,
+	"ar_code" integer,
+	"image_public_id" text,
+	"verified" boolean DEFAULT false NOT NULL,
+	"is_active" boolean DEFAULT true NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now()
+);
+
 CREATE TABLE "app_schema"."general_expenditure" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"account_code" text,
@@ -16,6 +33,8 @@ CREATE TABLE "app_schema"."general_expenditure" (
 	"resources_description" text,
 	"resources_quantity" integer,
 	"ar_code" serial NOT NULL,
+	"verified" boolean DEFAULT false NOT NULL,
+	"image_url" text,
 	"is_active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),

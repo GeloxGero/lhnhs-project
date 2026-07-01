@@ -11,9 +11,7 @@ export const ARCodePage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [seeding, setSeeding] = useState<boolean>(false);
   const [imageModalOpen, setImageModalOpen] = useState<boolean>(false);
-  const [selectedItemDescription, setSelectedItemDescription] = useState<
-    string | null
-  >(null);
+  const [selectedItem, setSelectedItem] = useState<ExpenseItem | null>(null);
 
   const arCode = Number(
     new URLSearchParams(window.location.search).get("code"),
@@ -62,8 +60,8 @@ export const ARCodePage = () => {
     }
   };
 
-  const handleViewImage = (description: string | null) => {
-    setSelectedItemDescription(description);
+  const handleViewImage = (item: ExpenseItem | null) => {
+    setSelectedItem(item);
     setImageModalOpen(true);
   };
 
@@ -126,7 +124,7 @@ export const ARCodePage = () => {
               </td>
               <td className="text-center">
                 <button
-                  onClick={() => handleViewImage(item.description)}
+                  onClick={() => handleViewImage(item)}
                   className="btn btn-xs btn-ghost text-base-content/40 hover:text-primary hover:bg-primary/10 border-base-content/10 hover:border-primary/30 gap-1 rounded-lg border transition-colors"
                 >
                   <svg
@@ -165,7 +163,7 @@ export const ARCodePage = () => {
       <ImageViewerModal
         isOpen={imageModalOpen}
         onClose={() => setImageModalOpen(false)}
-        itemDescription={selectedItemDescription}
+        item={selectedItem}
       />
       <div className="mx-auto max-w-4xl">
         {/* ── Header ── */}

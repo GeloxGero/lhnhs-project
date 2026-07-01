@@ -25,7 +25,6 @@ export const general_expenditure = app_schema.table("general_expenditure", {
   resourcesQuantity: integer("resources_quantity"),
   arCode: serial("ar_code").unique().notNull(),
   verified: boolean("verified").notNull().default(false),
-  image_url: text("image_url"),
 
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").defaultNow(),
