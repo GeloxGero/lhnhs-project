@@ -19,6 +19,8 @@ export const expense_item = app_schema.table("expense_item", {
   price: numeric("price"),
   total: numeric("total"),
   arCode: integer("ar_code"),
+  imageUrl: text("image_url"),
+  verified: boolean("verified").notNull().default(false),
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

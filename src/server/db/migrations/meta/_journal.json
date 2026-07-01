@@ -15,6 +15,13 @@
       "when": 1779032717616,
       "tag": "0001_slippery_susan_delgado",
       "breakpoints": false
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782946502816,
+      "tag": "0002_curious_the_anarchist",
+      "breakpoints": false
     }
   ]
 }

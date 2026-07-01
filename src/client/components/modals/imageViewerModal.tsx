@@ -1,5 +1,6 @@
 import { getCloudinaryImage } from "../../lib/helpers";
 import { AdvancedImage } from "@cloudinary/react";
+import { UploadImage } from "../DevUploadForm";
 
 const NoImage = () => {
   return (
@@ -24,6 +25,7 @@ const NoImage = () => {
             />
           </svg>
         </div>
+
         <div className="text-center">
           <p className="text-base-content/30 text-xs font-medium">
             No image uploaded yet
@@ -31,6 +33,7 @@ const NoImage = () => {
           <p className="text-base-content/20 mt-0.5 text-[10px]">
             Image will appear here once attached
           </p>
+          <UploadImage />
         </div>
       </div>
     </div>
@@ -113,7 +116,7 @@ export const ImageViewerModal = ({
               <NoImage />
             )}
           </div>
-
+          <NoImage />
           {/* Meta row */}
           <div className="flex items-center gap-4 px-5 py-3">
             <span className="text-base-content/30 font-mono text-[10px]">

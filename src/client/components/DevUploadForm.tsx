@@ -1,23 +1,36 @@
 import { uploadImageToCloudinary } from "@/services/cloudinary";
+import { useState } from "react";
 
-export const DevUploadForm = () => {
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+export const UploadImage = () => {
+  const [file, setFile] = useState<File | null>(null);
+
+  const handleSubmit = async () => {
     if (!file) return;
 
-    await uploadImageToCloudinary(file);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "receipts");
+    formData.append("folder", "expense_items_receipts");
 
-    console.log("Uploaded file!");
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dlzobzben/image/upload",
+      { method: "POST", body: formData },
+    );
+
+    const data = await response.json();
+    console.log(data);
   };
 
   return (
-    <form method="post" encType="multipart/form-data">
+    <div>
       <input
         type="file"
-        className="file-input file-input-ghost"
-        accept=".jpg, .jpeg, .png"
-        onChange={handleUpload}
+        className="file-input"
+        onChange={(e) => setFile(e.target.files?.[0] ?? null)}
       />
-    </form>
+      <button onClick={handleSubmit} className="btn btn-primary">
+        Upload
+      </button>
+    </div>
   );
 };

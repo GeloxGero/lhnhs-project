@@ -5655,10 +5655,10 @@ var require_lib2 = __commonJS({
   }
 });
 
-// .wrangler/tmp/bundle-om459s/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-jJUq6r/middleware-loader.entry.ts
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-om459s/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-jJUq6r/middleware-insertion-facade.js
 init_modules_watch_stub();
 
 // src/server/index.ts
@@ -17531,6 +17531,8 @@ var general_expenditure = app_schema.table("general_expenditure", {
   resourcesDescription: text("resources_description"),
   resourcesQuantity: integer("resources_quantity"),
   arCode: serial("ar_code").unique().notNull(),
+  verified: boolean("verified").notNull().default(false),
+  image_url: text("image_url"),
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow()
@@ -17764,6 +17766,8 @@ var expense_item = app_schema.table("expense_item", {
   price: numeric("price"),
   total: numeric("total"),
   arCode: integer("ar_code"),
+  imageUrl: text("image_url"),
+  verified: boolean("verified").notNull().default(false),
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow()
@@ -17999,7 +18003,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-om459s/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-jJUq6r/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -18032,7 +18036,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-om459s/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-jJUq6r/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

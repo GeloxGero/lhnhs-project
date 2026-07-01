@@ -1,57 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import type { GeneralExpenditureItem } from "@/lib/types";
+import type { GeneralExpenditureItem, ExpenseItem } from "@/lib/types";
 import { ImageViewerModal } from "./modals/imageViewerModal";
 import { Upload } from "lucide-react";
-
-type ExpenseItem = {
-  id: number;
-  unspc: string | null;
-  description: string | null;
-  specification: string | null;
-  unitOfMeasure: string | null;
-  quantity: number | null;
-  price: string | null;
-  total: string | null;
-  arCode: number | null;
-  isActive: boolean;
-  expenseTotal: number | null;
-  createdAt: string | null;
-  updatedAt: string | null;
-};
-
-const UploadFile = () => {
-  const [file, setFile] = useState<File | null>(null);
-
-  const handleSubmit = async () => {
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "receipts");
-    formData.append("folder", "expense_items_receipts");
-
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dlzobzben/image/upload",
-      { method: "POST", body: formData },
-    );
-
-    const data = await response.json();
-    console.log(data);
-  };
-
-  return (
-    <div>
-      <input
-        type="file"
-        className="file-input"
-        onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-      />
-      <button onClick={handleSubmit} className="btn btn-primary">
-        Upload
-      </button>
-    </div>
-  );
-};
+import { UploadImage } from "./DevUploadForm";
 
 // ARCodePage.tsx — reads the param on the client
 export const ARCodePage = () => {
@@ -349,7 +300,7 @@ export const ARCodePage = () => {
           </div>
         </div>
 
-        <UploadFile />
+        <UploadImage />
 
         {/* ── Footer ── */}
         <div className="border-base-content/10 bg-base-300/30 flex items-center justify-between border-t px-6 py-4">
